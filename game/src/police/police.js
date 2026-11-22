@@ -230,7 +230,7 @@ function updateHelicopter(game, dt, level) {
   h.angle += dt * 0.35;
   const goal = h.leaving
     ? new THREE.Vector3(p.x + 400, 90, p.z - 400)
-    : new THREE.Vector3(p.x + Math.cos(h.angle) * 26, 34, p.z + Math.sin(h.angle) * 26);
+    : new THREE.Vector3(p.x + Math.cos(h.angle) * 26, force.heliAltitude || 34, p.z + Math.sin(h.angle) * 26);
   h.pos.lerp(goal, Math.min(1, dt * 0.8));
   h.group.position.copy(h.pos);
   const look = Math.atan2(p.x - h.pos.x, p.z - h.pos.z);

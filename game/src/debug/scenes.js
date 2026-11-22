@@ -90,6 +90,7 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     drive(game, 'police', 317, 183, Math.PI, 27);
     for (const v2 of game.vehicles) if (v2.isPolice) { v2.driver = { police: true }; v2.siren = true; v2.ai = { mode: 'police', state: 'pursuit', route: [], routeT: 0, stuckT: 0, reverseT: 0, crew: 2, deployed: false }; }
     placeRoadblock(game, { x: 315, z: -60, axis: 'NS' });
+    game.police.heliAltitude = Number(game.params.get('heli') || 24);
     game.autopilot = { route: [{ x: 317.1, z: 60 }, { x: 317.1, z: -80 }, { x: 317.1, z: -300 }], speed: 28 };
     rig.fixedOffset = Math.PI * 0.82;
     rig.pitch = -0.17;

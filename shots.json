@@ -1,5 +1,6 @@
 [
-  { "name": "1-start.jpg", "query": "?shot=start&seed=1" },
-  { "name": "2-play.jpg", "query": "?shot=play&seed=1" },
-  { "name": "3-end.jpg", "query": "?shot=end&seed=1" }
+  { "name": "1-tidewater-chase.jpg", "query": "?scene=chase&camyaw=-2.4&campitch=-0.16", "wait": 3400 },
+  { "name": "2-reef-cleanup-shootout.jpg", "query": "?scene=shootout", "wait": 3700 },
+  { "name": "3-tidewater-sprint.jpg", "query": "?scene=race&camyaw=2.55&campitch=-0.16", "wait": 1700 },
+  { "name": "4-ocean-strip-roadblock.jpg", "query": "?scene=night", "wait": 3200 }
 ]

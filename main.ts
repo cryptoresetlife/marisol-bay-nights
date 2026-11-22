@@ -11,7 +11,7 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-game.ts';
@@ -38,3 +38,7 @@ writeFileSync(
     game_path_max_bytes: 1000,
   }),
 );
+
+// One summary line for whoever runs it; stdout only, so both runs still write identical files.
+const shotCount = readdirSync(join(out, 'screenshots')).filter((name) => !name.startsWith('.')).length;
+console.log(`Sundown Syndicate handed in: game/, ${shotCount} screenshots and dossier.json in ${out}`);
