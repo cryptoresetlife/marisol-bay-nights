@@ -1,42 +1,54 @@
 // Bullets: instant hit traces against people, cars and buildings, plus the glowing tracer streaks they
-// leave behind.
+// leave behind (thin additive bars, so they read even at a distance).
 import * as THREE from 'three';
 import { raycastBoxes } from '../systems/collisions.js';
 
 const MAX_TRACERS = 96;
+const hidden = new THREE.Matrix4().makeScale(0, 0, 0);
+const m4 = new THREE.Matrix4();
+const q = new THREE.Quaternion();
+const zAxis = new THREE.Vector3(0, 0, 1);
+const dirV = new THREE.Vector3();
+const mid = new THREE.Vector3();
+const scl = new THREE.Vector3();
 
 export function createTracers(scene) {
-  const pos = new Float32Array(MAX_TRACERS * 6);
-  const col = new Float32Array(MAX_TRACERS * 6);
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3).setUsage(THREE.DynamicDrawUsage));
-  const lines = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
-  lines.frustumCulled = false;
-  scene.add(lines);
-  return { lines, pos, col, life: new Float32Array(MAX_TRACERS), next: 0 };
+  const geo = new THREE.BoxGeometry(1, 1, 1);
+  const mat = new THREE.MeshBasicMaterial({ color: '#ffd27a', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+  const mesh = new THREE.InstancedMesh(geo, mat, MAX_TRACERS);
+  mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  for (let i = 0; i < MAX_TRACERS; i++) { mesh.setMatrixAt(i, hidden); mesh.setColorAt(i, new THREE.Color('#ffd27a')); }
+  mesh.frustumCulled = false;
+  scene.add(mesh);
+  return { mesh, life: new Float32Array(MAX_TRACERS), next: 0 };
 }
 
-export function drawTracer(tracers, a, b, color = [1.6, 1.25, 0.6]) {
+export function drawTracer(tracers, a, b, color = [1.8, 1.4, 0.6]) {
   const i = tracers.next;
   tracers.next = (i + 1) % MAX_TRACERS;
+  dirV.set(b.x - a.x, b.y - a.y, b.z - a.z);
+  const len = dirV.length() || 1;
   // only the last stretch of the bullet path glows, like a streak
-  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
-  const len = Math.hypot(dx, dy, dz) || 1;
-  const start = Math.max(0, len - Math.min(len, 14 + Math.random() * 10)) / len;
-  tracers.pos.set([a.x + dx * start, a.y + dy * start, a.z + dz * start, b.x, b.y, b.z], i * 6);
-  tracers.col.set([color[0] * 0.2, color[1] * 0.2, color[2] * 0.2, color[0], color[1], color[2]], i * 6);
-  tracers.life[i] = 0.09;
+  const streak = Math.min(len, 9 + Math.random() * 7);
+  dirV.divideScalar(len);
+  mid.set(b.x - dirV.x * streak / 2, b.y - dirV.y * streak / 2, b.z - dirV.z * streak / 2);
+  q.setFromUnitVectors(zAxis, dirV);
+  m4.compose(mid, q, scl.set(0.045, 0.045, streak));
+  tracers.mesh.setMatrixAt(i, m4);
+  tracers.mesh.setColorAt(i, new THREE.Color(color[0] / 1.8, color[1] / 1.8, color[2] / 1.8));
+  tracers.mesh.instanceMatrix.needsUpdate = true;
+  tracers.mesh.instanceColor.needsUpdate = true;
+  tracers.life[i] = 0.08;
 }
 
 export function updateTracers(tracers, dt) {
+  let changed = false;
   for (let i = 0; i < MAX_TRACERS; i++) {
     if (tracers.life[i] <= 0) continue;
     tracers.life[i] -= dt;
-    if (tracers.life[i] <= 0) tracers.pos.fill(0, i * 6, i * 6 + 6);
+    if (tracers.life[i] <= 0) { tracers.mesh.setMatrixAt(i, hidden); changed = true; }
   }
-  tracers.lines.geometry.attributes.position.needsUpdate = true;
-  tracers.lines.geometry.attributes.color.needsUpdate = true;
+  if (changed) tracers.mesh.instanceMatrix.needsUpdate = true;
 }
 
 // Ray against an upright cylinder standing at (cx, cy, cz).

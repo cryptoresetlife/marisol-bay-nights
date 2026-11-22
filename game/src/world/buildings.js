@@ -6,7 +6,7 @@ import { GRID } from './roads.js';
 import { blockDistrict } from './districts.js';
 import { LANDMARKS, blockRect, landmarkInBlock, landmarkDoor } from './landmarks.js';
 import { GeometryBatch, batchMesh, placeMatrix } from './geometry.js';
-import { makeFacadeTexture, makeStripeTexture, makeSignTexture } from './textures.js';
+import { makeFacadeTexture, makeStripeTexture, makeSignTexture, makeGlowTexture } from './textures.js';
 import { addCollisionBox } from '../systems/collisions.js';
 import { randRange, randInt, pickOne } from '../core/rng.js';
 
@@ -34,6 +34,7 @@ export function buildBuildings(scene, collisions, rng) {
   const batches = {};
   const batchFor = (style) => (batches[style] ||= new GeometryBatch());
   const trim = new GeometryBatch();
+  const shopGlass = new GeometryBatch();
   const awnings = new GeometryBatch();
   const roofTiles = new GeometryBatch();
   const signs = [];
@@ -57,7 +58,7 @@ export function buildBuildings(scene, collisions, rng) {
       }
       for (const lot of lots) {
         const fronts = frontSides(lot, inner);
-        const ctx = { batchFor, trim, awnings, roofTiles, signs, yards, collisions, rng, fronts, district };
+        const ctx = { batchFor, trim, shopGlass, awnings, roofTiles, signs, yards, collisions, rng, fronts, district };
         if (district.style === 'villa') buildVilla(lot, ctx);
         else if (district.style === 'industrial') buildWarehouse(lot, ctx);
         else buildTowerish(lot, ctx, () => SHOP_NAMES[shopIndex++ % SHOP_NAMES.length]);
@@ -79,12 +80,15 @@ export function buildBuildings(scene, collisions, rng) {
   }
   group.add(batchMesh(trim, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, metalness: 0.1 })));
   group.add(batchMesh(roofTiles, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 })));
+  const glassMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.12, metalness: 0.55, emissive: new THREE.Color('#ffc98a'), emissiveIntensity: 0 });
+  nightMaterials.push(glassMat);
+  group.add(batchMesh(shopGlass, glassMat));
   const stripe = makeStripeTexture('#ffffff', '#8f8f8f');
   group.add(batchMesh(awnings, new THREE.MeshStandardMaterial({ map: stripe, vertexColors: true, roughness: 0.9, side: THREE.DoubleSide })));
   const signGroup = buildSignMeshes(signs);
   group.add(signGroup.group);
   scene.add(group);
-  return { group, nightMaterials, signMaterials: signGroup.materials, yards, signs };
+  return { group, nightMaterials, signMaterials: signGroup.materials, haloMaterials: signGroup.haloMaterials, yards, signs };
 }
 
 function subdivide(rect, nx, nz, gap) {
@@ -136,9 +140,9 @@ function addStorefront(lot, dir, ctx, color, signText, signColor) {
   const f = facadePoint(lot, dir, 0.25);
   const w = f.width - 3;
   const along = dir[0] ? [0, 1] : [1, 0];
-  // dark shop glass band
+  // shop window band: reflective by day, lit from inside at night
   const gx = dir[0] ? 0.5 : w, gz = dir[0] ? w : 0.5;
-  ctx.trim.box(f.x, 0, f.z, gx, 3.6, gz, '#22313d', { roofColor: '#30414e' });
+  ctx.shopGlass.box(f.x, 0, f.z, gx, 3.6, gz, '#9cc3d4', { roofColor: '#5d7380' });
   // awning sloping out over the sidewalk
   const m = placeMatrix(f.x + dir[0] * 1.2, 4.1, f.z + dir[1] * 1.2, 0, f.yaw, 0);
   const geo = new THREE.BoxGeometry(w, 0.12, 2.6);
@@ -291,7 +295,9 @@ function buildLandmark(lm, lot, batchFor, trim, signs, collisions, rng) {
 function buildSignMeshes(signs) {
   const group = new THREE.Group();
   const materials = [];
+  const halos = new Map();
   const geo = new THREE.PlaneGeometry(1, 1);
+  const glow = makeGlowTexture();
   for (const s of signs) {
     const tex = makeSignTexture(s.text, { fg: s.color });
     const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, toneMapped: false, color: new THREE.Color(0.9, 0.9, 0.9) });
@@ -301,8 +307,15 @@ function buildSignMeshes(signs) {
     m.rotation.y = s.yaw;
     m.scale.set(s.w, s.h, 1);
     group.add(m);
+    // neon bloom: a soft additive halo in the sign colour that fades in after dark
+    if (!halos.has(s.color)) halos.set(s.color, new THREE.MeshBasicMaterial({ map: glow, color: s.color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false }));
+    const h = new THREE.Mesh(geo, halos.get(s.color));
+    h.position.set(s.x + Math.sin(s.yaw) * 0.08, s.y, s.z + Math.cos(s.yaw) * 0.08);
+    h.rotation.y = s.yaw;
+    h.scale.set(s.w * 1.7, s.h * 3.2, 1);
+    group.add(h);
   }
-  return { group, materials };
+  return { group, materials, haloMaterials: [...halos.values()] };
 }
 
 export function landmarkList() {

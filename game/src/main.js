@@ -258,6 +258,7 @@ function updateFrame(game, rawDt) {
   game.night = updateDayNight(game.city.dayNight, game.hours, focus, game.engine.camera.position, game.engine.renderer, rawDt);
   for (const m of game.city.buildings.nightMaterials) m.emissiveIntensity = game.night * 1.5;
   for (const m of game.city.buildings.signMaterials) m.color.setScalar(0.85 + game.night * 1.6);
+  for (const m of game.city.buildings.haloMaterials) m.opacity = game.night * 0.55;
   setStreetLightLevel(game.city.props, game.night);
   updateLampLights(game.city.props, focus, game.night, rawDt);
   updateSea(game.city.sea, game.time, game.night);

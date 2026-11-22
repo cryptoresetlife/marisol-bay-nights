@@ -70,7 +70,7 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1020; fon
 .controls-grid b { color: #ffd166; }
 .shop-list { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 18px; }
 .shop-item { display: flex; justify-content: space-between; align-items: center; gap: 20px; background: rgba(255,255,255,0.06); border-radius: 10px; padding: 10px 14px; font-size: 17px; }
-.shop-item button { width: 130px; font-size: 15px; padding: 8px 0; }
+.shop-item button { width: 210px; font-size: 14px; padding: 8px 0; }
 .shop-cash { text-align: center; color: #7dffb0; font-size: 22px; font-weight: bold; margin-bottom: 8px; }
 .footer-note { margin-top: 18px; font-size: 13px; opacity: 0.6; text-align: center; letter-spacing: 1px; }
 #bigmap { position: fixed; inset: 0; pointer-events: none; display: none; background: rgba(5,10,22,0.92); }

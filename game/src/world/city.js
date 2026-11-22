@@ -11,6 +11,7 @@ import { createDayNight } from './daynight.js';
 import { createCollisionWorld, addCollisionBox } from '../systems/collisions.js';
 import { createRng, randRange } from '../core/rng.js';
 import { WORLD_WEST, WORLD_NORTH } from './terrain.js';
+import { makeSignTexture } from './textures.js';
 
 export function buildCity(scene, { shadows = true } = {}) {
   const rng = createRng(1985);
@@ -44,5 +45,16 @@ function buildHorizonHills(scene, rng) {
     m.rotation.y = rng() * 6;
     group.add(m);
   }
+  // the hillside letters that greet everyone driving west
+  const letters = new THREE.Mesh(
+    new THREE.PlaneGeometry(260, 46),
+    new THREE.MeshBasicMaterial({ map: makeSignTexture('MARISOL BAY', { fg: '#ffffff', bg: null, w: 1024, h: 180, font: 'bold 150px Impact, "Arial Black", sans-serif' }), transparent: true, depthWrite: false }),
+  );
+  letters.position.set(-640, 58, -60);
+  letters.rotation.set(0, Math.PI / 2, 0);
+  const hill = new THREE.Mesh(geo, mat);
+  hill.scale.set(330, 120, 260);
+  hill.position.set(-700, 56, -60);
+  group.add(hill, letters);
   scene.add(group);
 }

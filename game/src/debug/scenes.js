@@ -30,6 +30,7 @@ function autofireAtEnemies(game, weapon, interval) {
     foes.sort((a, b) => Math.hypot(a.pos.x - p.pos.x, a.pos.z - p.pos.z) - Math.hypot(b.pos.x - p.pos.x, b.pos.z - p.pos.z));
     const f = foes[0];
     p.yaw = Math.atan2(f.pos.x - p.pos.x, f.pos.z - p.pos.z);
+    game.cameraRig.yaw += (p.yaw - 0.12 - game.cameraRig.yaw) * Math.min(1, dt * 3);
     t -= dt;
     if (t > 0) return;
     t = interval;
@@ -98,7 +99,7 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.hours = 11.2;
     game.godMode = true;
     startMission(game, 3, 3);
-    placePlayer(game, -176, 203, 0.15);
+    placePlayer(game, -228, 223, Math.PI / 2);
     game.player.current = 'smg';
     game.forceAim = true;
     for (const g of game.hostiles) g.alerted = true;
@@ -136,14 +137,17 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.godMode = true;
     giveWeapon(game.player, 'rifle', 180);
     game.player.current = 'rifle';
-    placePlayer(game, 309.5, -105, Math.PI);
+    placePlayer(game, 311, 2, Math.PI);
     setWantedLevel(game, 3);
-    placeRoadblock(game, { x: 315, z: -150, axis: 'NS' });
-    spawnPoliceCruiser(game, { x: 305, z: -126, yaw: 0.4, mode: 'roadblock' });
+    game.noCrimes = true; // keep the scene at three stars
+    game.wanted.lockLevel = true;
+    placeRoadblock(game, { x: 315, z: -28, axis: 'NS' });
+    spawnPoliceCruiser(game, { x: 305.5, z: -4, yaw: 0.4, mode: 'roadblock' });
     for (const v of game.vehicles) if (v.isPolice) { v.siren = true; v.ai.state = 'roadblock'; v.ai.deployed = true; }
     game.forceAim = true;
     game.autofire = autofireAtEnemies(game, 'rifle', 0.14);
     rig.pitch = -0.08;
+    if (game.params.get('wide') !== '0') rig.cinematic = { pos: new THREE.Vector3(310, 8.5, 31), look: new THREE.Vector3(316, 2.5, -26) };
   } else if (name === 'free') {
     game.hours = Number(game.params.get('hour') || 10.5);
   }

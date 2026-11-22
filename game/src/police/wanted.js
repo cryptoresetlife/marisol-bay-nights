@@ -72,6 +72,7 @@ function onLevelChange(game, before) {
 export function updateWantedLevel(game, dt) {
   const w = game.wanted;
   if (w.level === 0) { w.searching = false; return; }
+  if (w.lockLevel) return;
   const p = game.player.vehicle ? game.player.vehicle.pos : game.player.pos;
   let seen = false;
   const sees = (x, y, z, range) => Math.hypot(x - p.x, z - p.z) < range && hasLineOfSight(game.city.collisions, x, y, z, p.x, p.y + 1.2, p.z);

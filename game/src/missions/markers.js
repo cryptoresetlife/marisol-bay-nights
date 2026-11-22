@@ -15,7 +15,7 @@ export function createMarker(game, x, z, { color = '#ffd23f', radius = 2.4, heig
   const group = new THREE.Group();
   const y = groundHeight(x, z) + 0.05;
   group.position.set(x, y, z);
-  const beamMat = new THREE.MeshBasicMaterial({ map: makeBeamTexture(), color, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false });
+  const beamMat = new THREE.MeshBasicMaterial({ map: makeBeamTexture(), color, transparent: true, opacity: 0.32, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, toneMapped: false });
   const beam = new THREE.Mesh(beamGeo, beamMat);
   beam.scale.set(radius * 0.7, height, radius * 0.7);
   group.add(beam);

@@ -45,8 +45,8 @@ function placeCheckpointMarkers(game, race) {
   for (const m of race.markers) removeMarker(game, m);
   race.markers = [];
   const a = RACE_CHECKPOINTS[race.cp], b = RACE_CHECKPOINTS[race.cp + 1];
-  if (a) race.markers.push(createMarker(game, a.x, a.z, { color: race.cp === RACE_CHECKPOINTS.length - 1 ? '#7dffb0' : '#ffd23f', radius: 7, height: 45 }));
-  if (b) race.markers.push(createMarker(game, b.x, b.z, { color: '#ffffff', radius: 5, height: 20, chevron: false }));
+  if (a) race.markers.push(createMarker(game, a.x, a.z, { color: race.cp === RACE_CHECKPOINTS.length - 1 ? '#7dffb0' : '#ffd23f', radius: 5, height: 40 }));
+  if (b) race.markers.push(createMarker(game, b.x, b.z, { color: '#ffffff', radius: 3.5, height: 18, chevron: false }));
 }
 
 function progressOf(cp, pos) {

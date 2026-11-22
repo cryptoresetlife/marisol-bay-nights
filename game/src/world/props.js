@@ -194,7 +194,7 @@ export function updateLampLights(props, focus, night, dt) {
       .slice(0, props.lampLights.length);
     near.forEach(({ h }, i) => props.lampLights[i].position.set(h.x, CURB_HEIGHT + 6.6, h.z));
   }
-  for (const l of props.lampLights) l.intensity = night * 70;
+  for (const l of props.lampLights) l.intensity = night * 45;
 }
 
 const LAMP_ON = { R: new THREE.Color(3, 0.2, 0.15), Y: new THREE.Color(3, 2, 0.2), G: new THREE.Color(0.2, 3, 0.8) };
