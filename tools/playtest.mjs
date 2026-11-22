@@ -161,7 +161,13 @@ try {
   await G('g.dev.teleport(55.5, 0)');
   await stepIs('hold');
   check('robbery alarm brings the police', await until('g.wanted.level >= 2', 5000));
-  check('vault cracked after holding the lobby', await until("!g.dev.step().endsWith(':hold')", 30000));
+  let held = false;
+  for (let k = 0; k < 60 && !held; k++) {
+    // stay in the lobby even if a cruiser shoves Dez aside
+    held = await G("!String(g.dev.step()).endsWith(':hold') || (g.dev.teleport(55.5, 0), false)");
+    await b.sleep(500);
+  }
+  check('vault cracked after holding the lobby', held);
   check('four stars after the robbery', await until('g.wanted.level >= 4', 5000));
   await stepIs('enter');
   check('reach the getaway car', await enterNamed('getaway'));
@@ -190,6 +196,21 @@ try {
   await b.sleep(400);
   await G('g.dev.teleport(304.5, -90)');
   check('story complete: all eight chapters', await until('g.story.chapter >= 8', 30000), JSON.stringify(await info()));
+
+  // ---- Iron Pelican Arms ----------------------------------------------------------------
+  if (await G('!!g.player.vehicle')) { await b.press('KeyF'); await b.sleep(300); }
+  await G('g.dev.teleport(145.5, 90)');
+  await b.sleep(300);
+  await b.press('KeyE');
+  await b.sleep(300);
+  check('gun shop menu opens with E', await G("g.menu && g.menu.id === 'shop'"));
+  await b.screenshot('.tmp/shop.jpg');
+  await G("(document.querySelector('[data-buy=armor]').click(), true)");
+  await G("(document.querySelector('[data-buy=rifle]').click(), true)");
+  check('buy body armour and a rifle', (await G('g.player.armor')) === 100 && await G('!!g.player.weapons.rifle'));
+  await b.press('Escape');
+  await b.sleep(300);
+  check('leave the shop with Esc', (await info()).mode === 'play');
 
   // ---- death and the hospital -----------------------------------------------------------
   await G("(g.godMode = false, g.events.emit('playerHurt', { amount: 500, cause: 'test' }), true)");

@@ -114,7 +114,7 @@ export const CHAPTERS = [
         ['Lupe', "That's why I left a getaway car out back. Hold the lobby while Marco cracks the vault."],
       ] },
       { type: 'goto', to: { landmark: 'bank', door: true }, radius: 4, onFoot: true, text: 'Walk into Bayfront Savings' },
-      { type: 'hold', at: { landmark: 'bank', door: true }, radius: 9, duration: 16, allowGunfire: true, text: 'Hold the lobby while the vault is cracked', alarm: true },
+      { type: 'hold', at: { landmark: 'bank', door: true }, radius: 11, duration: 16, allowGunfire: true, text: 'Hold the lobby while the vault is cracked', alarm: true },
       { type: 'wanted', level: 4, dispatch: 'Dispatch: armed robbery at Bayfront Savings, all units, air support up' },
       { type: 'spawnVehicle', name: 'getaway', vehicle: 'marlin', color: '#ffb703', at: { x: 50.9, z: -14 }, yaw: Math.PI },
       { type: 'enter', vehicle: 'getaway', text: 'Get to the getaway Marlin GT' },

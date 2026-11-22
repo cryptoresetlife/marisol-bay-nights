@@ -41,6 +41,7 @@ export function drawBigMap(game) {
   const px = MAP_BOUNDS.scale * s; // screen pixels per metre
 
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.lineJoin = 'round';
   // street names
   ctx.font = `bold ${Math.max(9, px * 6)}px "Trebuchet MS", sans-serif`;
   ctx.fillStyle = 'rgba(255,255,255,0.85)';

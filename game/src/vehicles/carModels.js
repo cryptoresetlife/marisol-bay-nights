@@ -74,6 +74,7 @@ wheelGeo.rotateZ(Math.PI / 2);
 const rimGeo = new THREE.CylinderGeometry(0.22, 0.22, 0.28, 8);
 rimGeo.rotateZ(Math.PI / 2);
 const lampGeo = new THREE.BoxGeometry(0.42, 0.14, 0.08);
+const archGeo = new THREE.CircleGeometry(0.47, 16, 0, Math.PI);
 
 export function buildCarModel(key, color) {
   const t = VEHICLE_TYPES[key];
@@ -150,8 +151,13 @@ export function buildCarModel(key, color) {
   const wheels = [];
   const wz = t.len / 2 - 0.85;
   for (const [sx, sz] of [[-1, 1], [1, 1], [-1, -1], [1, -1]]) {
+    // dark wheel well painted on the body side behind each tyre
+    const arch = new THREE.Mesh(archGeo, shared.dark);
+    arch.position.set(sx * (t.wid / 2 + 0.005), 0.42, sz * wz);
+    arch.rotation.y = sx * Math.PI / 2;
+    group.add(arch);
     const pivot = new THREE.Group();
-    pivot.position.set(sx * (t.wid / 2 - 0.12), 0.36, sz * wz);
+    pivot.position.set(sx * (t.wid / 2 - 0.06), 0.36, sz * wz);
     const tire = new THREE.Mesh(wheelGeo, shared.tire);
     tire.castShadow = true;
     const rim = new THREE.Mesh(rimGeo, shared.rim);

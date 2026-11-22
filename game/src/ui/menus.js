@@ -14,7 +14,7 @@ export function openMenu(game, id, innerHtml, onClick, { dim = true, panel = tru
   root.innerHTML = `<div class="menu ${dim ? 'dim' : ''} ${className}">${panel ? `<div class="panel">${innerHtml}</div>` : innerHtml}</div>`;
   game.menu = { id, onClick, sel: 0, prevMode: game.menu ? game.menu.prevMode : game.mode };
   if (game.mode !== 'title') game.mode = 'menu';
-  releasePointer();
+  releasePointer(game.input);
   root.querySelectorAll('button').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); game.events.emit('uiClick', {}); onClick(b); }));
   root.querySelectorAll('input[type=range]').forEach((r) => r.addEventListener('input', () => onClick(r)));
   highlight(game);

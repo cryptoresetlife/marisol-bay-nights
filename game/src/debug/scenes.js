@@ -80,6 +80,7 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.godMode = true;
     game.story.chapter = 6;
     const v = drive(game, 'marlin', 317.1, 150, Math.PI, 27, '#ffb703');
+    v.health = v.maxHealth = 6000;
     enterVehicle(game, v);
     startMission(game, 6, 6);
     setWantedLevel(game, 4);
@@ -147,4 +148,6 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.hours = Number(game.params.get('hour') || 10.5);
   }
   if (game.params.get('hour')) game.hours = Number(game.params.get('hour'));
+  if (game.params.get('camyaw')) rig.fixedOffset = Number(game.params.get('camyaw'));
+  if (game.params.get('campitch')) rig.pitch = Number(game.params.get('campitch'));
 }

@@ -113,6 +113,7 @@ export function updateHud(game, dt) {
   const slot = p.weapons[p.current];
   $('hudWAmmo').textContent = weapon.melee ? '' : (p.reloadT > 0 ? 'RELOADING' : `${slot.clip} / ${slot.ammo}`);
   $('hudWIcon').className = 'w-icon w-' + p.current;
+  $('hudWeapon').style.display = p.vehicle ? 'none' : 'inline-flex';
   $('hudHealth').style.width = Math.max(0, p.health / p.maxHealth * 100) + '%';
   $('hudArmor').style.width = Math.max(0, p.armor) + '%';
   $('hudHealth').parentElement.classList.toggle('low', p.health < 30);

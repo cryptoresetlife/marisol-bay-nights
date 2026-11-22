@@ -73,7 +73,7 @@ export function installDamageRules(game) {
   ev.on('damageVehicle', ({ vehicle, amount }) => damageVehicle(game, vehicle, amount));
   ev.on('playerHurt', ({ amount, cause }) => damagePlayer(game, amount, cause));
   ev.on('vehicleImpact', ({ vehicle, other, impact }) => {
-    const dmg = Math.max(0, impact - 3) * 9;
+    const dmg = Math.max(0, impact - 5) * 7;
     damageVehicle(game, vehicle, dmg);
     if (other) damageVehicle(game, other, dmg * 0.9);
     const pv = game.player.vehicle;

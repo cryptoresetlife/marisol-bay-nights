@@ -47,7 +47,13 @@ export function createInput(canvas) {
   });
   canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   window.addEventListener('wheel', (e) => { input.wheel += Math.sign(e.deltaY); }, { passive: true });
-  document.addEventListener('pointerlockchange', () => { input.locked = document.pointerLockElement === canvas; });
+  document.addEventListener('pointerlockchange', () => {
+    const was = input.locked;
+    input.locked = document.pointerLockElement === canvas;
+    // Esc in Chrome drops the mouse lock before the page sees the key: treat that as a pause request
+    if (was && !input.locked && !input.expectUnlock) input.lostLock = true;
+    input.expectUnlock = false;
+  });
 
   return input;
 }
@@ -68,6 +74,9 @@ export function endInputFrame(input) {
   input.wheel = 0;
 }
 
-export function releasePointer() {
-  if (document.pointerLockElement && document.exitPointerLock) document.exitPointerLock();
+export function releasePointer(input = null) {
+  if (document.pointerLockElement && document.exitPointerLock) {
+    if (input) input.expectUnlock = true;
+    document.exitPointerLock();
+  }
 }

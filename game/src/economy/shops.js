@@ -1,7 +1,7 @@
 // Places to spend money: Iron Pelican Arms for guns, ammo and body armour, and the Fresh Coat spray shops
 // that repaint and repair your car and make the police forget your face. Walk or drive into the marker.
 import { getLandmark, landmarkDoor, landmarkCurb } from '../world/landmarks.js';
-import { WEAPONS, giveWeapon } from '../combat/weapons.js';
+import { WEAPONS, giveWeapon, cycleWeapon } from '../combat/weapons.js';
 import { spendMoney } from './money.js';
 import { clearWanted } from '../police/wanted.js';
 import { openMenu, closeMenu } from '../ui/menus.js';
@@ -34,10 +34,11 @@ export function updateShops(game, dt) {
     if (d > (s.kind === 'spray' ? 5 : 2.2)) continue;
     if (s.kind === 'guns' && !p.vehicle) {
       setPrompt(game, 'Press E to browse Iron Pelican Arms');
-      if (wasKeyPressed(game.input, 'KeyE')) openGunShop(game);
+      // E also cycles weapons; undo that when it was meant for the shop
+      if (wasKeyPressed(game.input, 'KeyE')) { cycleWeapon(p, -1); openGunShop(game); }
     } else if (s.kind === 'save' && !p.vehicle) {
       setPrompt(game, 'Press E to save at the Seabreeze safehouse');
-      if (wasKeyPressed(game.input, 'KeyE')) game.events.emit('requestSave', {});
+      if (wasKeyPressed(game.input, 'KeyE')) { cycleWeapon(p, -1); game.events.emit('requestSave', {}); }
     } else if (s.kind === 'spray' && p.vehicle && game.shopCooldown <= 0) {
       sprayVehicle(game);
     }

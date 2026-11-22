@@ -242,7 +242,7 @@ function updateHelicopter(game, dt, level) {
   h.beam.scale.set(1, len, 1);
   h.beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), new THREE.Vector3(dx / len, dy / len, dz / len));
   h.beam.quaternion.premultiply(h.group.quaternion.clone().invert());
-  h.beamMat.opacity = 0.12 + game.night * 0.25;
+  h.beamMat.opacity = Math.max(0, game.night - 0.2) * 0.4;
   h.red.visible = Math.floor(game.time * 2) % 2 === 0;
   if (h.leaving && Math.hypot(h.pos.x - p.x, h.pos.z - p.z) > 380) {
     game.engine.scene.remove(h.group);

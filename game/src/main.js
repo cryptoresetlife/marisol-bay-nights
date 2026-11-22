@@ -165,12 +165,14 @@ function handlePlayerActions(game) {
 function handleMenuKeys(game) {
   const input = game.input;
   if (game.mode === 'title' || game.mode === 'menu') { updateMenuKeys(game); }
-  if (wasKeyPressed(input, 'Escape')) {
+  const lostLock = input.lostLock;
+  input.lostLock = false;
+  if (wasKeyPressed(input, 'Escape') || (lostLock && game.mode === 'play' && !game.bigMap.open)) {
     if (game.bigMap.open) toggleBigMap(game, false);
     else if (game.mode === 'play') showPauseMenu(game, { onSave: () => game.events.emit('requestSave', {}), onQuit: () => goToTitle(game) });
     else if (game.mode === 'menu' && game.menu?.id !== 'title') closeMenu(game);
   }
-  if (game.mode === 'play' && wasKeyPressed(input, 'KeyM')) { toggleBigMap(game); releasePointer(); }
+  if (game.mode === 'play' && wasKeyPressed(input, 'KeyM')) { toggleBigMap(game); releasePointer(input); }
   input.enabled = game.mode === 'play' && !game.bigMap.open;
 }
 
