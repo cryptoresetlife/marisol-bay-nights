@@ -38,7 +38,7 @@ async function driveTo(x, z, yaw = 0) {
 async function walkToStart(x, z) {
   if (await G('!!g.player.vehicle')) { await b.press('KeyF'); await b.sleep(400); }
   await G(`g.dev.teleport(${x}, ${z})`);
-  return until('!!g.activeMission', 8000);
+  return until('!!g.activeMission', 15000);
 }
 
 try {

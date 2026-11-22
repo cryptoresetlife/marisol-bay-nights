@@ -33,12 +33,12 @@ export function drawTracer(tracers, a, b, color = [1.8, 1.4, 0.6]) {
   dirV.divideScalar(len);
   mid.set(b.x - dirV.x * streak / 2, b.y - dirV.y * streak / 2, b.z - dirV.z * streak / 2);
   q.setFromUnitVectors(zAxis, dirV);
-  m4.compose(mid, q, scl.set(0.045, 0.045, streak));
+  m4.compose(mid, q, scl.set(0.055, 0.055, streak));
   tracers.mesh.setMatrixAt(i, m4);
   tracers.mesh.setColorAt(i, new THREE.Color(color[0] / 1.8, color[1] / 1.8, color[2] / 1.8));
   tracers.mesh.instanceMatrix.needsUpdate = true;
   tracers.mesh.instanceColor.needsUpdate = true;
-  tracers.life[i] = 0.08;
+  tracers.life[i] = 0.11;
 }
 
 export function updateTracers(tracers, dt) {

@@ -100,7 +100,7 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.hours = 11.2;
     game.godMode = true;
     startMission(game, 3, 3);
-    placePlayer(game, -228, 223, Math.PI / 2);
+    placePlayer(game, -224, 223.5, Math.PI / 2);
     game.player.current = 'smg';
     game.forceAim = true;
     for (const g of game.hostiles) g.alerted = true;

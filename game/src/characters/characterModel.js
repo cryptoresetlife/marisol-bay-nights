@@ -14,7 +14,7 @@ const PANTS = ['#2b2d42', '#3d5a80', '#8d99ae', '#f4f1de', '#6b705c', '#264653',
 const HAIR = ['#1b1b1b', '#3b2416', '#6f4e37', '#c9a227', '#a52a2a', '#dcdcdc', '#2b1d0e'];
 
 export const LOOKS = {
-  dez: { skin: '#8d5524', shirt: '#ff7a3d', pants: '#24324f', hair: '#141414', shoes: '#f5f5f5', style: 'short', accent: '#ffd166' },
+  dez: { skin: '#8d5524', shirt: '#ff7a3d', pants: '#24324f', hair: '#141414', shoes: '#f5f5f5', style: 'short', accent: '#ffd166', shades: true },
   lupe: { skin: '#c68642', shirt: '#ff4fa3', pants: '#1d3557', hair: '#2b1d0e', shoes: '#ffffff', style: 'long' },
   cop: { skin: null, shirt: '#1f3a68', pants: '#14213d', hair: '#1b1b1b', shoes: '#111111', style: 'cap', hat: '#14213d' },
   swat: { skin: null, shirt: '#22262e', pants: '#1a1d23', hair: '#111', shoes: '#111111', style: 'helmet', hat: '#111317', vest: '#2f3540' },
@@ -37,12 +37,15 @@ export function buildCharacterModel(lookIn) {
   const root = new THREE.Group();
   const body = new GeometryBatch();
   body.mesh(box(0.46, 0.62, 0.26), placeMatrix(0, 1.26, 0), look.shirt);
+  body.mesh(box(0.56, 0.14, 0.28), placeMatrix(0, 1.5, 0), look.shirt); // shoulders
+  body.mesh(box(0.2, 0.05, 0.03), placeMatrix(0, 1.73, 0.14), '#3a2418'); // mouth shadow
+  body.mesh(box(0.05, 0.07, 0.04), placeMatrix(0, 1.76, 0.15), look.skin); // nose
   if (look.vest) body.mesh(box(0.5, 0.42, 0.3), placeMatrix(0, 1.3, 0), look.vest);
   if (look.accent) body.mesh(box(0.47, 0.06, 0.27), placeMatrix(0, 1.05, 0), look.accent);
   body.mesh(box(0.42, 0.14, 0.24), placeMatrix(0, 0.9, 0), look.pants);
   body.mesh(box(0.12, 0.08, 0.12), placeMatrix(0, 1.6, 0), look.skin);
   body.mesh(box(0.26, 0.28, 0.27), placeMatrix(0, 1.77, 0), look.skin);
-  body.mesh(box(0.27, 0.05, 0.05), placeMatrix(0, 1.8, 0.13), '#1a1a1a'); // brows / shades line
+  body.mesh(box(0.27, 0.06, 0.05), placeMatrix(0, 1.81, 0.13), look.shades ? '#0d0d10' : '#1a1a1a'); // brows or shades
   if (look.style === 'long') {
     body.mesh(box(0.29, 0.1, 0.3), placeMatrix(0, 1.94, -0.01), look.hair);
     body.mesh(box(0.29, 0.36, 0.08), placeMatrix(0, 1.74, -0.15), look.hair);
@@ -76,7 +79,7 @@ export function buildCharacterModel(lookIn) {
   const legParts = [[0.17, 0.4, 0.19, -0.2, 0, look.pants], [0.16, 0.42, 0.18, -0.6, 0, legColor], [0.17, 0.08, 0.27, -0.84, 0.04, look.shoes]];
   const legL = limb(legParts, -0.11, 0.88);
   const legR = limb(legParts, 0.11, 0.88);
-  const armParts = [[0.13, 0.3, 0.14, -0.14, 0, look.shirt], [0.11, 0.32, 0.12, -0.44, 0, look.skin]];
+  const armParts = [[0.13, 0.3, 0.14, -0.14, 0, look.shirt], [0.11, 0.3, 0.12, -0.43, 0, look.skin], [0.12, 0.1, 0.13, -0.62, 0.01, look.skin]];
   const armL = limb(armParts, -0.3, 1.52);
   const armR = limb(armParts, 0.3, 1.52);
   const gun = new THREE.Mesh(box(0.07, 0.12, 0.34), gunMaterial);
