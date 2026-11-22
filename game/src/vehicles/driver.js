@@ -1,7 +1,7 @@
 // AI driving: pure-pursuit steering toward a point, speed control, obstacle scanning ahead of the
 // bumper, and road-graph routes that police, racers and mission cars follow across the city.
 import { clamp } from '../core/rng.js';
-import { findRoadPath, nearestNode, GRID, directionBetween, rightOf } from '../world/roads.js';
+import { findRoadPath, nearestNode, GRID, directionBetween, rightOf, DIR_X, DIR_Z } from '../world/roads.js';
 
 export function steerToward(v, tx, tz, targetSpeed, { gain = 1.9, reverseOk = true } = {}) {
   const fx = Math.sin(v.yaw), fz = Math.cos(v.yaw);
@@ -45,10 +45,20 @@ export function scanAhead(game, v, range, halfWidth = 1.7) {
 }
 
 // Waypoints along the road grid from near (x, z) to near (tx, tz), on the right-hand lane.
-export function planRoute(game, x, z, tx, tz, lane = GRID.laneOffset) {
+export function planRoute(game, x, z, tx, tz, lane = GRID.laneOffset, heading = null) {
   const roads = game.city.roads;
-  const a = nearestNode(roads, x, z), b = nearestNode(roads, tx, tz);
-  const ids = findRoadPath(roads, a.id, b.id);
+  let a = nearestNode(roads, x, z);
+  const b = nearestNode(roads, tx, tz);
+  let noFirst = -1;
+  if (heading !== null) {
+    // start from the intersection in front of the car and never U-turn there
+    const fx = Math.sin(heading), fz = Math.cos(heading);
+    let d = 0, best = -2;
+    for (let k = 0; k < 4; k++) { const dot = DIR_X[k] * fx + DIR_Z[k] * fz; if (dot > best) { best = dot; d = k; } }
+    if ((a.x - x) * fx + (a.z - z) * fz < 0 && a.links[d] >= 0) a = roads.nodes[a.links[d]];
+    noFirst = (d + 2) % 4;
+  }
+  const ids = findRoadPath(roads, a.id, b.id, noFirst);
   const pts = [];
   for (let k = 0; k < ids.length; k++) {
     const n = roads.nodes[ids[k]];

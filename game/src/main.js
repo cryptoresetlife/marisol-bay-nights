@@ -45,7 +45,7 @@ import { createExplosionLight, updateExplosionLight } from './fx/explosions.js';
 import { createAudio, unlockAudio, applyVolumes, installSoundEvents, updateSirens } from './audio/sound.js';
 import { createEngineSound, updateEngineSound } from './audio/engineSound.js';
 import { createRadio, updateRadio, changeStation, radioLabel } from './audio/radio.js';
-import { applyDebugScene } from './debug/scenes.js';
+import { applyDebugScene, installDevTools } from './debug/scenes.js';
 
 const params = new URLSearchParams(location.search);
 
@@ -91,6 +91,7 @@ export function createGame() {
 function installGameEvents(game) {
   const ev = game.events;
   ev.on('dispatch', ({ text }) => showEvent(game, text, '#5aa8ff'));
+  ev.on('missionFailed', ({ reason }) => { game.lastFail = reason; });
   ev.on('playerDied', () => beginWasted(game, 'hospital'));
   ev.on('playerArrested', () => { if (game.player.alive && !game.respawn.state) beginWasted(game, 'arrest'); });
   ev.on('carjack', ({ vehicle }) => { game.stats.carsStolen++; showEvent(game, `Carjacked a ${vehicle.type.name}`, '#ff9f43'); });
@@ -283,6 +284,7 @@ game.startNewGame = () => startNewGame(game);
 game.continueGame = () => continueGame(game);
 game.saveGame = () => saveGame(game);
 game.say = (lines) => playDialogue(game, lines);
+installDevTools(game);
 const scene = params.get('scene');
 if (scene) applyDebugScene(game, scene, { startNewGame, placePlayer });
 else if (params.get('play') === '1') startNewGame(game);

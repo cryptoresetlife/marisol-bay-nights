@@ -46,6 +46,7 @@ export function updateGunmen(game, dt) {
   const target = p.vehicle ? p.vehicle.pos : p.pos;
   for (let i = game.hostiles.length - 1; i >= 0; i--) {
     const g = game.hostiles[i];
+    if (!g) continue; // a mission ending mid-loop can remove several at once
     if (g.removeMe) { removeGunman(game, g); continue; }
     if (g.dead) {
       g.deadTimer -= dt;

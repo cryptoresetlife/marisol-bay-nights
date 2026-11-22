@@ -31,11 +31,16 @@ export function installCrimeRules(game) {
   ev.on('gunmanKilled', ({ gunman, source }) => {
     if (byPlayer(source) && (gunman.faction === 'police' || gunman.faction === 'swat')) reportCrime(game, 'killCop', gunman.pos.x, gunman.pos.z);
   });
-  ev.on('vehicleShot', ({ vehicle }) => { if (vehicle.isPolice) reportCrime(game, 'shootPoliceCar', vehicle.pos.x, vehicle.pos.z); vehicle.lastAttacker = game.player; });
+  ev.on('vehicleShot', ({ vehicle }) => {
+    if (vehicle.isPolice) reportCrime(game, 'shootPoliceCar', vehicle.pos.x, vehicle.pos.z);
+    vehicle.lastAttacker = game.player;
+    vehicle.attackedByPlayer = true;
+  });
   ev.on('vehicleImpact', ({ vehicle, other, impact }) => {
     const pv = game.player.vehicle;
     if (!pv || impact < 6) return;
     const hit = vehicle === pv ? other : other === pv ? vehicle : null;
+    if (hit) hit.attackedByPlayer = true;
     if (hit && hit.isPolice && game.wanted.level === 0) reportCrime(game, 'ramPolice', pv.pos.x, pv.pos.z);
   });
 }

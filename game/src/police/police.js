@@ -91,7 +91,7 @@ function drivePursuit(game, v, dt) {
     ai.route = [];
   } else {
     ai.routeT -= dt;
-    if (ai.routeT <= 0 || ai.route.length === 0) { ai.route = planRoute(game, v.pos.x, v.pos.z, tpos.x, tpos.z, 0); ai.routeT = 2.5; }
+    if (ai.routeT <= 0 || ai.route.length === 0) { ai.route = planRoute(game, v.pos.x, v.pos.z, tpos.x, tpos.z, 0, v.yaw); ai.routeT = 2.5; }
     speed = Math.min(v.type.maxSpeed * 0.8, 34);
     followRoute(v, ai.route, speed, 9);
   }

@@ -105,7 +105,8 @@ export function isOnRoad(x, z) {
 }
 
 // Breadth-first path over the grid; returns node ids from start to goal inclusive.
-export function findRoadPath(roads, startId, goalId) {
+// `noFirstDir` forbids leaving the start in that direction (a car can't U-turn on the spot).
+export function findRoadPath(roads, startId, goalId, noFirstDir = -1) {
   if (startId === goalId) return [startId];
   const prev = new Int32Array(roads.nodes.length).fill(-2);
   prev[startId] = -1;
@@ -113,10 +114,12 @@ export function findRoadPath(roads, startId, goalId) {
   while (queue.length) {
     const cur = queue.shift();
     if (cur === goalId) break;
-    for (const next of roads.nodes[cur].links) {
+    roads.nodes[cur].links.forEach((next, d) => {
+      if (cur === startId && d === noFirstDir) return;
       if (next >= 0 && prev[next] === -2) { prev[next] = cur; queue.push(next); }
-    }
+    });
   }
+  if (prev[goalId] === -2) return noFirstDir >= 0 ? findRoadPath(roads, startId, goalId) : [startId];
   const path = [];
   for (let at = goalId; at >= 0; at = prev[at]) path.push(at);
   return path.reverse();

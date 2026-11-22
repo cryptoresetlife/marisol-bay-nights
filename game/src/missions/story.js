@@ -55,7 +55,7 @@ export const CHAPTERS = [
       ] },
       { type: 'spawnVehicle', name: 'courier', vehicle: 'van', color: '#e9ecef', at: { x: 51.1, z: 20 }, yaw: Math.PI, driver: true, noEnter: true },
       { type: 'goto', to: { x: 51, z: 40 }, radius: 45, inVehicle: true, text: 'Drive to Bayfront Savings in Downtown' },
-      { type: 'follow', vehicle: 'courier', via: { x: 47, z: -135 }, dest: { landmark: 'coralHQ', curb: true }, text: 'Follow the courier van without being spotted' },
+      { type: 'follow', vehicle: 'courier', dest: { landmark: 'coralHQ', curb: true }, text: 'Follow the courier van without being spotted' },
       { type: 'reveal', what: 'coralHQ' },
       { type: 'talk', lines: [
         ['Dez', "The Coral Kings warehouse. Vance's money goes straight to the gang."],
@@ -101,7 +101,7 @@ export const CHAPTERS = [
         ['Dez', "Which way?"],
         ['Lupe', "Up Tidewater. Wreck that car!"],
       ] },
-      { type: 'chase', name: 'rook', vehicle: 'coupe', color: '#8338ec', at: { x: 302.9, z: -120 }, yaw: Math.PI, text: "Wreck Rook's getaway coupe" },
+      { type: 'chase', name: 'rook', vehicle: 'coupe', color: '#8338ec', at: { x: 317.1, z: -112 }, yaw: Math.PI, text: "Wreck Rook's getaway coupe" },
       { type: 'talk', lines: [['Rook', "Okay, okay! Vance pays us to scare people. That's all I know!"], ['Dez', 'Tell him Dez is back in town.']] },
     ],
   },

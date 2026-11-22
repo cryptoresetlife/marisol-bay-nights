@@ -120,6 +120,7 @@ export function failMission(game, reason) {
 export function completeMission(game, run) {
   cleanupRun(game, run, true);
   game.story.chapter = Math.max(game.story.chapter, run.index + 1);
+  game.story.retryDelay = 8; // give the player a moment before the next chapter can trigger
   addMoney(game, run.def.reward, 'mission');
   game.stats.missions = (game.stats.missions || 0) + 1;
   const last = run.index === CHAPTERS.length - 1;

@@ -41,6 +41,32 @@ function autofireAtEnemies(game, weapon, interval) {
   };
 }
 
+// Helpers the automated play tests call through window.__game.dev.
+export function installDevTools(game) {
+  game.dev = {
+    teleport(x, z, yaw) {
+      const v = game.player.vehicle;
+      const o = v || game.player;
+      o.pos.x = x; o.pos.z = z;
+      if (yaw !== undefined) { o.yaw = yaw; game.cameraRig.yaw = yaw; }
+      if (v) { v.vel.x = v.vel.z = 0; v.yawRate = 0; }
+    },
+    skipLine() { if (game.dialogue.current) game.dialogue.t = 0; },
+    named(name) { return game.activeMission?.named[name] || null; },
+    nearNamed(name, dist = 2.8) {
+      const v = game.dev.named(name);
+      if (!v) return false;
+      game.dev.teleport(v.pos.x + Math.cos(v.yaw) * dist, v.pos.z - Math.sin(v.yaw) * dist);
+      return true;
+    },
+    shootHostiles() {
+      for (const g of game.hostiles) if (!g.dead) game.events.emit('bulletHit', { kind: 'gunman', ref: g, point: g.pos, damage: 1000, shooter: game.player, dir: { x: 0, y: 0, z: 1 } });
+    },
+    wreck(name) { const v = game.dev.named(name); if (v) game.events.emit('damageVehicle', { vehicle: v, amount: 99999 }); },
+    step() { const m = game.activeMission; return m ? `${m.def.id}:${m.def.steps[m.step]?.type}` : null; },
+  };
+}
+
 export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
   startNewGame(game);
   game.hideIntro = true;

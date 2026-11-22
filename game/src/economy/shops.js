@@ -25,7 +25,7 @@ export function shopSpots() {
 }
 
 export function updateShops(game, dt) {
-  if (game.mode !== 'play' || game.activeMission?.busy) return;
+  if (game.mode !== 'play') return;
   const p = game.player;
   const pos = p.vehicle ? p.vehicle.pos : p.pos;
   game.shopCooldown = Math.max(0, (game.shopCooldown || 0) - dt);

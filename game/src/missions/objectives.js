@@ -174,8 +174,9 @@ export const OBJECTIVES = {
     begin(game, run, step) {
       const v = run.named[step.vehicle];
       const dest = resolvePoint(step.dest);
-      const via = step.via || dest;
-      run.state.route = [...planRoute(game, v.pos.x, v.pos.z, via.x, via.z), ...planRoute(game, via.x, via.z, dest.x, dest.z)];
+      // plan from the intersection ahead of the van so it never starts with a U-turn
+      run.state.route = [{ x: v.pos.x + Math.sin(v.yaw) * 12, z: v.pos.z + Math.cos(v.yaw) * 12 }, ...planRoute(game, v.pos.x, v.pos.z, dest.x, dest.z, undefined, v.yaw)];
+      run.state.blocked = 0;
       run.state.dest = dest;
       run.state.lost = 0; run.state.close = 0;
       v.ai = { mode: 'mission' };
@@ -184,9 +185,12 @@ export const OBJECTIVES = {
     },
     update(game, run, step, dt) {
       const v = run.named[step.vehicle];
-      if (v.destroyed || v.health < v.maxHealth * 0.95) return 'fail:They noticed the attack and called it off.';
+      if (v.destroyed || v.attackedByPlayer) return 'fail:They noticed the attack and called it off.';
       const gap = scanAhead(game, v, 12);
-      const speed = gap < 10 ? Math.max(0, (gap - 4) * 1.5) : 12;
+      run.state.blocked = gap < 6 ? run.state.blocked + dt : Math.max(0, run.state.blocked - dt);
+      // after a few seconds stuck behind something, the driver squeezes past it
+      const speed = gap < 10 && run.state.blocked < 3 ? Math.max(0, (gap - 4) * 1.5) : 12;
+      if (run.state.blocked > 6) run.state.blocked = 0;
       const left = followRoute(v, run.state.route, speed, 6);
       moveMarker(run.state.marker, v.pos.x, v.pos.z);
       game.missionBlips = [{ x: v.pos.x, z: v.pos.z, glyph: '▲', color: '#4fc3ff', kind: 'target' }];
@@ -272,7 +276,7 @@ export const OBJECTIVES = {
           const d = Math.hypot(n.x - p.x, n.z - p.z);
           if (d > bd) { bd = d; best = n; }
         }
-        run.state.route = planRoute(game, v.pos.x, v.pos.z, best.x, best.z).slice(1);
+        run.state.route = planRoute(game, v.pos.x, v.pos.z, best.x, best.z, undefined, v.yaw);
         if (!run.state.route.length) run.state.route = [{ x: nearestNode(game.city.roads, v.pos.x, v.pos.z).x, z: v.pos.z }];
       }
       followRoute(v, run.state.route, 27, 9);
