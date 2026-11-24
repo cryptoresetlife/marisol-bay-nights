@@ -1,6 +1,6 @@
 [
-  { "name": "1-tidewater-chase.jpg", "query": "?scene=chase&camyaw=-2.4&campitch=-0.16", "wait": 3400 },
-  { "name": "2-reef-cleanup-shootout.jpg", "query": "?scene=shootout", "wait": 3700 },
-  { "name": "3-tidewater-sprint.jpg", "query": "?scene=race&camyaw=2.55&campitch=-0.16", "wait": 1700 },
+  { "name": "1-tidewater-chase.jpg", "query": "?scene=chase&camyaw=-2.5&campitch=-0.14&camdist=0.8", "wait": 3400 },
+  { "name": "2-reef-cleanup-shootout.jpg", "query": "?scene=shootout&aimbias=0.2&camfov=42&campitch=-0.07&camdist=1.45&wanted=2", "wait": 4200 },
+  { "name": "3-pelican-ave-carjack.jpg", "query": "?scene=hijack", "wait": 2600 },
   { "name": "4-ocean-strip-roadblock.jpg", "query": "?scene=night", "wait": 3200 }
 ]

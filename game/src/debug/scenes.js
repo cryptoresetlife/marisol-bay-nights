@@ -30,7 +30,7 @@ function autofireAtEnemies(game, weapon, interval) {
     foes.sort((a, b) => Math.hypot(a.pos.x - p.pos.x, a.pos.z - p.pos.z) - Math.hypot(b.pos.x - p.pos.x, b.pos.z - p.pos.z));
     const f = foes[0];
     p.yaw = Math.atan2(f.pos.x - p.pos.x, f.pos.z - p.pos.z);
-    game.cameraRig.yaw += (p.yaw - 0.12 - game.cameraRig.yaw) * Math.min(1, dt * 3);
+    game.cameraRig.yaw += (p.yaw + (game.cameraRig.aimBias ?? -0.12) - game.cameraRig.yaw) * Math.min(1, dt * 3);
     t -= dt;
     if (t > 0) return;
     t = interval;
@@ -170,4 +170,8 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
   if (game.params.get('hour')) game.hours = Number(game.params.get('hour'));
   if (game.params.get('camyaw')) rig.fixedOffset = Number(game.params.get('camyaw'));
   if (game.params.get('campitch')) rig.pitch = Number(game.params.get('campitch'));
+  if (game.params.get('aimbias')) rig.aimBias = Number(game.params.get('aimbias'));
+  if (game.params.get('camfov')) rig.fovOverride = Number(game.params.get('camfov'));
+  if (game.params.get('wanted')) setWantedLevel(game, Number(game.params.get('wanted')));
+  if (game.params.get('camdist') && name !== 'chase') rig.distScale = Number(game.params.get('camdist'));
 }

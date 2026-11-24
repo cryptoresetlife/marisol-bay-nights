@@ -165,8 +165,10 @@ export function setHeldWeapon(model, weaponId) {
   const size = GUN_SIZE[weaponId];
   model.gun.visible = !!size;
   if (size) {
+    // barrel runs along the forearm, so it points where the arm aims
     model.gun.scale.set(size[0] / 0.07, size[1] / 0.12, size[2] / 0.34);
-    model.gun.position.z = size[2] / 2 - 0.05;
+    model.gun.rotation.x = Math.PI / 2;
+    model.gun.position.set(0, -0.62 - (size[2] / 2 - 0.12), 0.07);
   }
 }
 
