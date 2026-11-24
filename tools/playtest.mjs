@@ -235,6 +235,32 @@ try {
   await b.sleep(800);
   const loaded = await info();
   check('continue restores the story and cash', loaded.mode === 'play' && loaded.chapter === 8 && Math.abs(loaded.money - money) < 2, JSON.stringify(loaded));
+  check('respect earned over the story raises max health', await G('g.player.maxHealth > 100'), String(await G('g.player.maxHealth')));
+
+  // phone: P opens it, 2 calls Manny's Motors, who drops a car at the kerb for $500
+  const beforeCall = await G('({ cars: g.vehicles.length, money: g.money })');
+  await b.press('KeyP');
+  await b.sleep(200);
+  check('phone opens with P', await G('g.phone.open'));
+  await b.press('Digit2');
+  await b.sleep(300);
+  const afterCall = await G("({ delivered: g.vehicles.filter((v) => v.typeKey === 'marlin' && v.color === '#7df9ff').length, money: g.money })");
+  check('mechanic delivers a car for $500', afterCall.delivered === 1 && beforeCall.money - afterCall.money === 500, JSON.stringify(afterCall));
+
+  // garage: put Dez in the delivered car on the pad; it is stored as soon as it stands still there
+  await G(`(() => { const v = g.vehicles.find((c) => c.typeKey === 'marlin' && c.color === '#7df9ff'); const s = g.garage.spot; v.pos.x = s.x; v.pos.z = s.z; v.vel.x = v.vel.z = 0; const k = v.type.wid / 2 + 0.7; g.player.pos.set(s.x + Math.cos(v.yaw) * k, 0, s.z - Math.sin(v.yaw) * k); return true; })()`);
+  await b.sleep(200);
+  await b.press('KeyF');
+  check('car stored in the Seabreeze garage', await until('g.garage.cars.length === 1 && !g.player.vehicle', 5000), JSON.stringify(await info()));
+  await b.sleep(3300);
+  await G('(() => { const s = g.garage.spot; g.player.pos.set(s.x, 0, s.z); return true; })()');
+  await b.sleep(200);
+  await b.press('KeyG');
+  check('G takes the car back out', await until("g.garage.cars.length === 0 && g.vehicles.some((v) => v.color === '#7df9ff')", 3000));
+
+  // weather: a downpour soaks the roads, which costs grip
+  await G("(g.weather.state = 'rain', true)");
+  check('rain soaks the streets', await until('g.weather.wetness > 0.05', 15000), String(await G('g.weather.wetness')));
 } catch (e) {
   check('test run finished without exceptions', false, e.message);
 } finally {
