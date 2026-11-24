@@ -75,3 +75,9 @@ html, body { margin: 0; height: 100%; overflow: hidden; background: #0b1020; fon
 .footer-note { margin-top: 18px; font-size: 13px; opacity: 0.6; text-align: center; letter-spacing: 1px; }
 #bigmap { position: fixed; inset: 0; pointer-events: none; display: none; background: rgba(5,10,22,0.92); }
 #bigmap canvas { width: 100%; height: 100%; }
+.skills { margin: 4px 0 14px; padding: 10px 14px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+.skills .rank { text-align: center; color: #ffd166; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+.skills .row { margin: 6px 0; font-size: 15px; }
+.skillbar { flex: 1; height: 8px; background: rgba(255,255,255,0.12); border-radius: 4px; overflow: hidden; }
+.skillbar i { display: block; height: 100%; background: linear-gradient(90deg, #ff7a3d, #ffd166); }
+.skills .statline { margin-top: 8px; font-size: 13px; opacity: 0.75; text-align: center; }

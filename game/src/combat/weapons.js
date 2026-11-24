@@ -5,6 +5,7 @@ import { traceShot, drawTracer } from './projectiles.js';
 import { emitMuzzleFlash, emitSparks, emitDust } from '../fx/particles.js';
 import { cameraAimDirection, shakeCamera } from '../core/camera.js';
 import { wasKeyPressed } from '../core/input.js';
+import { shootingAccuracy } from '../systems/progression.js';
 
 export const WEAPONS = {
   fists: { id: 'fists', name: 'Fists', melee: true, damage: 22, rate: 2.4, range: 2.0, price: 0 },
@@ -74,7 +75,7 @@ export function updatePlayerCombat(game, dt) {
   const fx = Math.sin(p.yaw), fz = Math.cos(p.yaw);
   origin.set(p.pos.x + fx * 0.6 - fz * 0.3, p.pos.y + 1.45, p.pos.z + fz * 0.6 + fx * 0.3);
   const target = aimHit.point;
-  fireWeapon(game, p, origin, dirTmp.subVectors(target, origin).normalize(), w.id);
+  fireWeapon(game, p, origin, dirTmp.subVectors(target, origin).normalize(), w.id, game.progression ? shootingAccuracy(game) : 1);
   shakeCamera(game, w.kick);
   game.cameraRig.pitch += w.kick * 0.12;
   if (slot.clip === 0 && slot.ammo > 0) p.reloadT = 1.3;

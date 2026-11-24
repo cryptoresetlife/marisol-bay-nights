@@ -2,6 +2,7 @@
 // mouse sensitivity, traffic and crowd density), the controls card, and a generic panel used by shops.
 // Arrow keys and Enter work as well as the mouse.
 import { releasePointer, wasKeyPressed } from '../core/input.js';
+import { SKILLS, MAX_LEVEL, skillLevel, skillProgress, respectRank } from '../systems/progression.js';
 
 const CONTROLS = [
   ['W A S D', 'Walk / drive'], ['Mouse', 'Look around'], ['Shift', 'Sprint'], ['Space', 'Jump / handbrake'],
@@ -90,8 +91,20 @@ export function loadSettings(game) {
   try { Object.assign(game.settings, JSON.parse(localStorage.getItem('sundown.settings') || '{}')); } catch { /* ignore */ }
 }
 
+function skillsPanel(game) {
+  if (!game.progression) return '';
+  const rows = Object.keys(SKILLS).map((k) => {
+    const lvl = skillLevel(game, k);
+    const pct = Math.round(((lvl + (lvl >= MAX_LEVEL ? 0 : skillProgress(game, k))) / MAX_LEVEL) * 100);
+    return `<div class="row"><span>${SKILLS[k].name}</span><span class="skillbar"><i style="width:${pct}%"></i></span><b>${lvl}/${MAX_LEVEL}</b></div>`;
+  }).join('');
+  const s = game.stats;
+  return `<div class="skills"><div class="rank">${respectRank(game)}</div>${rows}
+    <div class="statline">Missions ${game.story.chapter}/8 · Cars stolen ${s.carsStolen} · Takedowns ${s.kills}</div></div>`;
+}
+
 export function showPauseMenu(game, { onSave, onQuit }) {
-  const html = `<h2>PAUSED</h2><div class="menu-buttons">
+  const html = `<h2>PAUSED</h2>${skillsPanel(game)}<div class="menu-buttons">
     <button data-act="resume">Resume</button><button data-act="save">Save Game</button>
     <button data-act="settings">Settings</button><button data-act="controls">Controls</button>
     <button data-act="quit">Quit to Title</button></div>`;

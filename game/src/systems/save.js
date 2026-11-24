@@ -22,6 +22,7 @@ export function saveGame(game) {
     raceBest: game.sideJobs.raceBest,
     taxiFares: game.sideJobs.taxiFares,
     stats: game.stats,
+    progression: game.progression,
   };
   try {
     localStorage.setItem(KEY, JSON.stringify(data));
@@ -48,6 +49,7 @@ export function loadGame(game) {
   game.sideJobs.raceBest = data.raceBest || null;
   game.sideJobs.taxiFares = data.taxiFares || 0;
   game.stats = { ...game.stats, ...(data.stats || {}) };
+  if (data.progression?.xp) game.progression.xp = { ...game.progression.xp, ...data.progression.xp };
   game.events.emit('loaded', data);
   return true;
 }

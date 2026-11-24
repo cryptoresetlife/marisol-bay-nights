@@ -6,6 +6,7 @@ import { isKeyDown, wasKeyPressed } from '../core/input.js';
 import { resolveCircle } from '../systems/collisions.js';
 import { groundHeight } from '../world/terrain.js';
 import { wrapAngle } from '../core/rng.js';
+import { sprintBoost, staminaDrain } from '../systems/progression.js';
 
 export const WALK_SPEED = 3.3;
 export const SPRINT_SPEED = 7.2;
@@ -43,8 +44,10 @@ export function updatePlayerOnFoot(game, dt) {
   const len = Math.hypot(mx, mz);
   p.aiming = game.mode === 'play' && p.alive && (input.buttons[2] || (input.buttons[0] && p.current !== 'fists') || !!game.forceAim);
   const sprint = isKeyDown(input, 'ShiftLeft', 'ShiftRight') && !p.aiming && p.stamina > 0.05;
-  const speed = len > 0.01 ? (sprint ? SPRINT_SPEED : p.aiming ? 2.4 : WALK_SPEED) : 0;
-  p.stamina = Math.min(1, Math.max(0, p.stamina + (sprint && len > 0 ? -0.12 : 0.2) * dt));
+  const fit = game.progression ? sprintBoost(game) : 1;
+  const speed = len > 0.01 ? (sprint ? SPRINT_SPEED * fit : p.aiming ? 2.4 : WALK_SPEED) : 0;
+  const drain = game.progression ? staminaDrain(game) : 1;
+  p.stamina = Math.min(1, Math.max(0, p.stamina + (sprint && len > 0 ? -0.12 * drain : 0.2) * dt));
   if (len > 0.01) { mx /= len; mz /= len; }
   const accel = Math.min(1, dt * 12);
   p.vel.x += (mx * speed - p.vel.x) * accel;

@@ -40,6 +40,7 @@ import { createDialogue, updateDialogue, playDialogue } from './ui/dialogue.js';
 import { showTitleScreen, showPauseMenu, closeMenu, updateMenuKeys, loadSettings } from './ui/menus.js';
 import { saveGame, loadGame, hasSave } from './systems/save.js';
 import { createRespawn, beginWasted, updateRespawn } from './systems/respawn.js';
+import { createProgression, installProgressionRules, updateProgression, applyRespectPerks } from './systems/progression.js';
 import { createParticles, updateParticles, emitTireSmoke } from './fx/particles.js';
 import { createExplosionLight, updateExplosionLight } from './fx/explosions.js';
 import { createAudio, unlockAudio, applyVolumes, installSoundEvents, updateSirens } from './audio/sound.js';
@@ -67,6 +68,7 @@ export function createGame() {
     sideJobs: createSideJobs(), race: createRaceState(), dialogue: createDialogue(), respawn: createRespawn(),
     audio: createAudio(), radio: createRadio(), engineSound: createEngineSound(),
     stats: { missions: 0, carsStolen: 0, kills: 0 },
+    progression: createProgression(),
     ready: false,
   };
   loadSettings(game);
@@ -84,6 +86,7 @@ export function createGame() {
   installCrimeRules(game);
   installSoundEvents(game);
   installMissionRules(game);
+  installProgressionRules(game);
   installGameEvents(game);
   return game;
 }
@@ -114,6 +117,9 @@ export function startNewGame(game) {
   resetWorld(game);
   game.money = 200;
   game.story = createStory();
+  game.progression = createProgression();
+  applyRespectPerks(game);
+  game.player.health = game.player.maxHealth;
   const door = landmarkDoor(getLandmark('police'));
   placePlayer(game, door.x + 2, door.z - 1.5, Math.PI);
   game.hours = 10.5;
@@ -125,6 +131,8 @@ export function continueGame(game) {
   resetWorld(game);
   game.story = createStory();
   loadGame(game);
+  applyRespectPerks(game);
+  game.player.health = game.player.maxHealth;
   const door = landmarkDoor(getLandmark('safehouse'));
   placePlayer(game, door.x - 1.5, door.z, -Math.PI / 2);
   showEvent(game, 'Welcome back to Marisol Bay', '#7dffb0');
@@ -224,6 +232,7 @@ function updatePlayState(game, dt) {
   updateStreetRace(game, dt);
   updateSideJobs(game, dt);
   updateShops(game, dt);
+  updateProgression(game, dt);
   updateRespawn(game, dt);
 }
 
