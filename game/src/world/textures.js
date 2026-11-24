@@ -85,6 +85,65 @@ export function makeFacadeTexture(style) {
   return out;
 }
 
+// Shop windows: four 4 m bays side by side (one with a glass door), dark aluminium frames, a kickplate,
+// sky reflections on the glass and an interior of shelves, goods and ceiling lamps that lights up at night.
+export function makeShopfrontTexture() {
+  if (cache.has('shopfront')) return cache.get('shopfront');
+  const rng = createRng(777);
+  const BW = 256, H = 232, W = BW * 4;
+  const [c, ctx] = canvas(W, H);
+  const [e, ectx] = canvas(W, H);
+  ectx.fillStyle = '#000'; ectx.fillRect(0, 0, W, H);
+  const goods = ['#ff6b6b', '#ffd166', '#06d6a0', '#118ab2', '#f78c6b', '#c77dff', '#ffffff', '#ef476f'];
+  for (let b = 0; b < 4; b++) {
+    const x0 = b * BW;
+    // interior: back wall, shelves with goods, lamps
+    ctx.fillStyle = '#3a3f4a'; ctx.fillRect(x0, 0, BW, H);
+    const back = ['#f3e7d3', '#dfeaf2', '#f6dde4', '#e4f2e1'][b];
+    ctx.fillStyle = back; ctx.fillRect(x0 + 14, 34, BW - 28, H - 70);
+    ectx.fillStyle = '#ffe0a8'; ectx.fillRect(x0 + 14, 34, BW - 28, H - 70);
+    for (let s = 0; s < 3; s++) {
+      const sy = 70 + s * 42;
+      ctx.fillStyle = '#7b6a58'; ctx.fillRect(x0 + 18, sy, BW - 36, 5);
+      for (let gx = x0 + 22; gx < x0 + BW - 30; gx += 10 + rng() * 8) {
+        const gh = 12 + rng() * 22, gw = 6 + rng() * 8;
+        ctx.fillStyle = goods[Math.floor(rng() * goods.length)];
+        ctx.fillRect(gx, sy - gh, gw, gh);
+        ectx.fillStyle = 'rgba(80,60,40,0.9)'; ectx.fillRect(gx, sy - gh, gw, gh);
+      }
+    }
+    for (let l = 0; l < 3; l++) {
+      ctx.fillStyle = '#fff6dc'; ctx.fillRect(x0 + 40 + l * 80, 22, 26, 5);
+      ectx.fillStyle = '#ffffff'; ectx.fillRect(x0 + 40 + l * 80, 22, 26, 5);
+    }
+    // sky reflection over the glass, strongest at the top
+    const g = ctx.createLinearGradient(x0, 0, x0 + BW * 0.7, H);
+    g.addColorStop(0, 'rgba(210,235,250,0.75)'); g.addColorStop(0.45, 'rgba(150,195,220,0.35)'); g.addColorStop(1, 'rgba(40,60,80,0.15)');
+    ctx.fillStyle = g; ctx.fillRect(x0, 0, BW, H);
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.beginPath(); ctx.moveTo(x0 + 60, 0); ctx.lineTo(x0 + 90, 0); ctx.lineTo(x0 + 30, H); ctx.lineTo(x0, H); ctx.closePath(); ctx.fill();
+    // door bay
+    if (b === 1) {
+      ctx.fillStyle = '#20242b'; ctx.fillRect(x0 + 88, 30, 80, H - 30);
+      ctx.fillStyle = 'rgba(160,200,220,0.55)'; ctx.fillRect(x0 + 96, 40, 64, H - 52);
+      ctx.fillStyle = '#c9ced3'; ctx.fillRect(x0 + 146, 120, 4, 34);
+      ectx.fillStyle = '#ffd9a0'; ectx.fillRect(x0 + 96, 40, 64, H - 52);
+      ctx.fillStyle = '#ffffff'; ctx.font = 'bold 14px "Segoe UI", sans-serif'; ctx.textAlign = 'center'; ctx.fillText('OPEN', x0 + 128, 62);
+      ectx.fillStyle = '#ff5a7a'; ectx.font = 'bold 14px "Segoe UI", sans-serif'; ectx.textAlign = 'center'; ectx.fillText('OPEN', x0 + 128, 62);
+    }
+    // frames and kickplate
+    ctx.fillStyle = '#23272e';
+    ctx.fillRect(x0, 0, 8, H); ctx.fillRect(x0 + BW - 8, 0, 8, H); ctx.fillRect(x0, 0, BW, 10);
+    ctx.fillRect(x0, H - 30, BW, 30);
+    ectx.fillStyle = '#000'; ectx.fillRect(x0, H - 30, BW, 30); ectx.fillRect(x0, 0, 8, H); ectx.fillRect(x0 + BW - 8, 0, 8, H);
+    ctx.fillStyle = '#5a6069'; ctx.fillRect(x0, H - 32, BW, 3);
+    if (b !== 1) { ctx.fillStyle = '#23272e'; ctx.fillRect(x0 + BW / 2 - 3, 10, 6, H - 40); ectx.fillStyle = '#000'; ectx.fillRect(x0 + BW / 2 - 3, 10, 6, H - 40); }
+  }
+  const out = { map: toTexture(c), emissive: toTexture(e) };
+  cache.set('shopfront', out);
+  return out;
+}
+
 function asphalt(ctx, w, h, rng) {
   ctx.fillStyle = '#44474d'; ctx.fillRect(0, 0, w, h);
   speckle(ctx, w, h, rng, w * h / 18, ['#3b3e44', '#4d5056', '#55585e', '#393c41'], 2);

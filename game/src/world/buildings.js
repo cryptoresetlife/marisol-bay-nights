@@ -6,7 +6,7 @@ import { GRID } from './roads.js';
 import { blockDistrict } from './districts.js';
 import { LANDMARKS, blockRect, landmarkInBlock, landmarkDoor } from './landmarks.js';
 import { GeometryBatch, batchMesh, placeMatrix } from './geometry.js';
-import { makeFacadeTexture, makeStripeTexture, makeSignTexture, makeGlowTexture } from './textures.js';
+import { makeFacadeTexture, makeStripeTexture, makeSignTexture, makeGlowTexture, makeShopfrontTexture } from './textures.js';
 import { addCollisionBox } from '../systems/collisions.js';
 import { randRange, randInt, pickOne } from '../core/rng.js';
 
@@ -80,7 +80,8 @@ export function buildBuildings(scene, collisions, rng) {
   }
   group.add(batchMesh(trim, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, metalness: 0.1 })));
   group.add(batchMesh(roofTiles, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 })));
-  const glassMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.12, metalness: 0.55, emissive: new THREE.Color('#ffc98a'), emissiveIntensity: 0 });
+  const shopTex = makeShopfrontTexture();
+  const glassMat = new THREE.MeshStandardMaterial({ map: shopTex.map, emissiveMap: shopTex.emissive, vertexColors: true, roughness: 0.18, metalness: 0.2, emissive: new THREE.Color('#ffc98a'), emissiveIntensity: 0 });
   nightMaterials.push(glassMat);
   group.add(batchMesh(shopGlass, glassMat));
   const stripe = makeStripeTexture('#ffffff', '#8f8f8f');
@@ -142,7 +143,7 @@ function addStorefront(lot, dir, ctx, color, signText, signColor) {
   const along = dir[0] ? [0, 1] : [1, 0];
   // shop window band: reflective by day, lit from inside at night
   const gx = dir[0] ? 0.5 : w, gz = dir[0] ? w : 0.5;
-  ctx.shopGlass.box(f.x, 0, f.z, gx, 3.6, gz, '#9cc3d4', { roofColor: '#5d7380' });
+  ctx.shopGlass.box(f.x, 0, f.z, gx, 3.6, gz, '#ffffff', { roofColor: '#5d7380', tileW: 16, tileH: 3.6 });
   // awning sloping out over the sidewalk
   const m = placeMatrix(f.x + dir[0] * 1.2, 4.1, f.z + dir[1] * 1.2, 0, f.yaw, 0);
   const geo = new THREE.BoxGeometry(w, 0.12, 2.6);
