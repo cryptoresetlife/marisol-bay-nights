@@ -49,7 +49,7 @@ export function updatePlayerCombat(game, dt) {
   if (game.mode !== 'play' || !p.alive || p.vehicle || game.cutscene) return;
   if (wasKeyPressed(input, 'KeyQ') || input.wheel < 0) cycleWeapon(p, -1);
   if (wasKeyPressed(input, 'KeyE') || input.wheel > 0) cycleWeapon(p, 1);
-  for (let k = 1; k <= 5; k++) if (wasKeyPressed(input, 'Digit' + k) && p.weapons[WEAPON_ORDER[k - 1]]) p.current = WEAPON_ORDER[k - 1];
+  if (!game.phone?.open) for (let k = 1; k <= 5; k++) if (wasKeyPressed(input, 'Digit' + k) && p.weapons[WEAPON_ORDER[k - 1]]) p.current = WEAPON_ORDER[k - 1];
   const w = WEAPONS[p.current];
   const slot = p.weapons[p.current];
   if (p.reloadT > 0) {

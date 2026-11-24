@@ -37,6 +37,7 @@ import { createHud, updateHud, showEvent, showBanner, setPrompt } from './ui/hud
 import { paintCityMap } from './ui/mapPainter.js';
 import { createBigMap, toggleBigMap, drawBigMap } from './ui/bigMap.js';
 import { createDialogue, updateDialogue, playDialogue } from './ui/dialogue.js';
+import { createPhone, updatePhone } from './ui/phone.js';
 import { showTitleScreen, showPauseMenu, closeMenu, updateMenuKeys, loadSettings } from './ui/menus.js';
 import { saveGame, loadGame, hasSave } from './systems/save.js';
 import { createRespawn, beginWasted, updateRespawn } from './systems/respawn.js';
@@ -68,7 +69,7 @@ export function createGame() {
     sideJobs: createSideJobs(), race: createRaceState(), dialogue: createDialogue(), respawn: createRespawn(),
     audio: createAudio(), radio: createRadio(), engineSound: createEngineSound(),
     stats: { missions: 0, carsStolen: 0, kills: 0 },
-    progression: createProgression(),
+    progression: createProgression(), phone: createPhone(),
     ready: false,
   };
   loadSettings(game);
@@ -253,6 +254,7 @@ function updateFrame(game, rawDt) {
     updateTitleCamera(game);
   } else if (game.mode === 'play' && !game.bigMap.open) {
     handlePlayerActions(game);
+    updatePhone(game);
     updatePlayState(game, dt);
     updateFollowCamera(game, rawDt);
   } else {

@@ -7,7 +7,7 @@ import { SKILLS, MAX_LEVEL, skillLevel, skillProgress, respectRank } from '../sy
 const CONTROLS = [
   ['W A S D', 'Walk / drive'], ['Mouse', 'Look around'], ['Shift', 'Sprint'], ['Space', 'Jump / handbrake'],
   ['F', 'Enter, exit or steal a car'], ['Left click', 'Fire / punch'], ['Right click', 'Aim'], ['Q / E, wheel', 'Switch weapon'],
-  ['R', 'Reload (on foot) / radio station (in car)'], ['H', 'Horn'], ['M', 'Map'], ['T', 'Taxi job (in a cab)'], ['Esc', 'Pause'],
+  ['R', 'Reload (on foot) / radio station (in car)'], ['H', 'Horn'], ['M', 'Map'], ['P', 'Phone: call Lupe, a mechanic or a lawyer'], ['T', 'Taxi job (in a cab)'], ['Esc', 'Pause (skills and stats)'],
 ];
 
 export function openMenu(game, id, innerHtml, onClick, { dim = true, panel = true, className = '' } = {}) {
