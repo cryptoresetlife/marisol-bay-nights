@@ -55,6 +55,8 @@ export function updateFollowCamera(game, dt) {
     fov = aiming ? 52 : 62;
     height = 0;
   }
+  if (rig.distScale) dist *= rig.distScale;
+  if (rig.fovOverride) fov = rig.fovOverride;
   rig.dist += (dist - rig.dist) * Math.min(1, dt * 6);
   rig.shoulder += (shoulder - rig.shoulder) * Math.min(1, dt * 8);
   rig.fov += (fov - rig.fov) * Math.min(1, dt * 4);

@@ -51,7 +51,7 @@ const params = new URLSearchParams(location.search);
 
 export function createGame() {
   const lowfx = params.get('lowfx') === '1';
-  const engine = createEngine(document.getElementById('view'), { shadows: !lowfx });
+  const engine = createEngine(document.getElementById('view'), { shadows: !lowfx, postFx: !lowfx && params.get('post') !== '0' });
   const game = {
     engine, params,
     input: createInput(engine.renderer.domElement),
@@ -256,6 +256,7 @@ function updateFrame(game, rawDt) {
   updateExplosionLight(game, dt);
   const focus = game.mode === 'title' ? game.engine.camera.position : game.player.pos;
   game.night = updateDayNight(game.city.dayNight, game.hours, focus, game.engine.camera.position, game.engine.renderer, rawDt);
+  game.engine.night = game.night;
   for (const m of game.city.buildings.nightMaterials) m.emissiveIntensity = game.night * 1.5;
   for (const m of game.city.buildings.signMaterials) m.color.setScalar(0.85 + game.night * 1.6);
   for (const m of game.city.buildings.haloMaterials) m.opacity = game.night * 0.55;

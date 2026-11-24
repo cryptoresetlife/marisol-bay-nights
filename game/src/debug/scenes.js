@@ -77,23 +77,25 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
   const rig = game.cameraRig;
 
   if (name === 'chase') {
-    game.hours = 16.4;
+    game.hours = 15.2;
     game.godMode = true;
     game.story.chapter = 6;
-    const v = drive(game, 'marlin', 317.1, 150, Math.PI, 27, '#ffb703');
+    const v = drive(game, 'marlin', 317.1, 150, Math.PI, 27, '#e63946');
     v.health = v.maxHealth = 6000;
     enterVehicle(game, v);
     startMission(game, 6, 6);
     setWantedLevel(game, 4);
-    drive(game, 'police', 316.4, 161, Math.PI, 28);
-    drive(game, 'police', 312.4, 170, Math.PI - 0.05, 28);
-    drive(game, 'police', 317, 183, Math.PI, 27);
+    drive(game, 'police', 313.6, 157.5, Math.PI - 0.03, 28.5);
+    drive(game, 'police', 318.2, 164, Math.PI, 28);
+    drive(game, 'police', 314, 176, Math.PI - 0.04, 27.5);
+    drive(game, 'police', 318, 190, Math.PI, 27);
     for (const v2 of game.vehicles) if (v2.isPolice) { v2.driver = { police: true }; v2.siren = true; v2.ai = { mode: 'police', state: 'pursuit', route: [], routeT: 0, stuckT: 0, reverseT: 0, crew: 2, deployed: false }; }
     placeRoadblock(game, { x: 315, z: -60, axis: 'NS' });
     game.police.heliAltitude = Number(game.params.get('heli') || 24);
     game.autopilot = { route: [{ x: 317.1, z: 60 }, { x: 317.1, z: -80 }, { x: 317.1, z: -300 }], speed: 28 };
     rig.fixedOffset = Math.PI * 0.82;
     rig.pitch = -0.17;
+    rig.distScale = Number(game.params.get('camdist') || 1);
     for (let k = 0; k < 10; k++) spawnTrafficCar(game);
     playDialogue(game, [['Lupe', 'Four stars and a chopper, Dez! Lose them before you come anywhere near the safehouse!']], null, 3);
   } else if (name === 'shootout') {
@@ -149,6 +151,19 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.autofire = autofireAtEnemies(game, 'rifle', 0.14);
     rig.pitch = -0.08;
     if (game.params.get('wide') !== '0') rig.cinematic = { pos: new THREE.Vector3(310, 8.5, 31), look: new THREE.Vector3(316, 2.5, -26) };
+  } else if (name === 'showroom') {
+    // every vehicle type and a row of locals parked on Tidewater Drive, for checking models up close
+    game.hours = 15;
+    game.godMode = true;
+    game.noCrimes = true;
+    placePlayer(game, 305, 92, 0);
+    const types = ['marlin', 'coupe', 'sedan', 'taxi', 'pickup', 'van', 'roadster', 'police', 'tactical'];
+    types.forEach((t, k) => createVehicle(game, t, { x: 308.5, z: 70 + k * 6.2, yaw: 0.35, parked: true }));
+    for (let k = 0; k < 8; k++) spawnPedestrian(game, 304 + (k % 2) * 0.8, 72 + k * 2.4, { loop: { bi: 4, bj: 4, corner: 1, cw: true } });
+    const front = game.params.get('front') === '1';
+    rig.cinematic = front
+      ? { pos: new THREE.Vector3(305, 2.0, 127), look: new THREE.Vector3(309, 0.8, 112) }
+      : { pos: new THREE.Vector3(302.5, 1.9, 65.5), look: new THREE.Vector3(308, 0.9, 74) };
   } else if (name === 'free') {
     game.hours = Number(game.params.get('hour') || 10.5);
   }
