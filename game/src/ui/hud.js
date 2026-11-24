@@ -3,6 +3,7 @@
 import { createMinimap, drawMinimap } from './minimap.js';
 import { WEAPONS } from '../combat/weapons.js';
 import { formatClock } from '../world/daynight.js';
+import { weatherLabel } from '../world/weather.js';
 import { locationLabel } from '../world/districts.js';
 import { vehicleSpeed } from '../vehicles/vehicle.js';
 
@@ -99,7 +100,7 @@ export function updateHud(game, dt) {
   const p = game.player;
   hud.root.style.display = game.mode === 'title' || game.hideHud ? 'none' : 'block';
   if (game.mode === 'title') return;
-  $('hudClock').textContent = formatClock(game.hours);
+  $('hudClock').textContent = game.weather ? `${weatherLabel(game.weather)}  ${formatClock(game.hours)}` : formatClock(game.hours);
   const w = game.wanted;
   const blink = w.searching && Math.floor(game.time * 3) % 2 === 0;
   hud.stars.forEach((s, i) => {

@@ -150,7 +150,8 @@ export function applyDebugScene(game, name, { startNewGame, placePlayer }) {
     game.forceAim = true;
     game.autofire = autofireAtEnemies(game, 'rifle', 0.14);
     rig.pitch = -0.08;
-    if (game.params.get('wide') !== '0') rig.cinematic = { pos: new THREE.Vector3(310, 8.5, 31), look: new THREE.Vector3(316, 2.5, -26) };
+    if (game.params.get('near') === '1') rig.cinematic = { pos: new THREE.Vector3(308.5, 5.2, 14), look: new THREE.Vector3(316, 1.6, -26) };
+    else if (game.params.get('wide') !== '0') rig.cinematic = { pos: new THREE.Vector3(310, 8.5, 31), look: new THREE.Vector3(316, 2.5, -26) };
   } else if (name === 'showroom') {
     // every vehicle type and a row of locals parked on Tidewater Drive, for checking models up close
     game.hours = 15;

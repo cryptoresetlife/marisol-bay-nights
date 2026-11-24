@@ -75,10 +75,12 @@ export function buildStreetSurfaces(scene) {
   const group = new THREE.Group();
   group.name = 'streets';
   const std = (map, extra = {}) => new THREE.MeshStandardMaterial({ map, vertexColors: true, roughness: 0.92, ...extra });
-  group.add(batchMesh(road, std(makeRoadTexture()), { castShadow: false }));
-  group.add(batchMesh(cross, std(makeIntersectionTexture()), { castShadow: false }));
+  // asphalt, crossings and pavements get shinier when the weather system wets them
+  const wetMaterials = [std(makeRoadTexture()), std(makeIntersectionTexture()), std(makeSidewalkTexture())];
+  group.add(batchMesh(road, wetMaterials[0], { castShadow: false }));
+  group.add(batchMesh(cross, wetMaterials[1], { castShadow: false }));
   group.add(batchMesh(zebra, std(makeCrosswalkTexture(), { transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 }), { castShadow: false }));
-  group.add(batchMesh(walk, std(makeSidewalkTexture()), { castShadow: false }));
+  group.add(batchMesh(walk, wetMaterials[2], { castShadow: false }));
   group.add(batchMesh(grass, std(makeGrassTexture()), { castShadow: false }));
   group.add(batchMesh(quay, std(makeQuayTexture()), { castShadow: false }));
   group.add(batchMesh(curb, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.9 }), { castShadow: false }));
@@ -96,5 +98,5 @@ export function buildStreetSurfaces(scene) {
     group.add(rim);
   }
   scene.add(group);
-  return { group, lakes };
+  return { group, lakes, wetMaterials };
 }

@@ -4,6 +4,7 @@ import { resolveCircle } from '../systems/collisions.js';
 import { groundHeight } from '../world/terrain.js';
 import { clamp } from '../core/rng.js';
 import { drivingGrip } from '../systems/progression.js';
+import { roadGrip } from '../world/weather.js';
 
 export function stepVehiclePhysics(game, v, dt) {
   const t = v.type;
@@ -32,7 +33,7 @@ export function stepVehiclePhysics(game, v, dt) {
     v.braking = true;
   }
   const skill = v.driver === 'player' && game.progression ? drivingGrip(game) : 1;
-  const grip = c.handbrake ? 1.3 : t.grip * skill * (disabled ? 0.6 : 1);
+  const grip = c.handbrake ? 1.3 : t.grip * skill * roadGrip(game.weather) * (disabled ? 0.6 : 1);
   vS *= Math.exp(-grip * dt);
 
   const speedFactor = clamp(vF / 7, -1, 1);

@@ -8,6 +8,7 @@ import { createEvents } from './core/events.js';
 import { createFollowCamera, updateFollowCamera } from './core/camera.js';
 import { buildCity } from './world/city.js';
 import { updateDayNight } from './world/daynight.js';
+import { createWeather, updateWeather, WEATHER } from './world/weather.js';
 import { updateSignalLamps, setStreetLightLevel, updateLampLights } from './world/props.js';
 import { updateSea } from './world/water.js';
 import { updateTrafficLights } from './world/roads.js';
@@ -73,6 +74,7 @@ export function createGame() {
     ready: false,
   };
   loadSettings(game);
+  game.weather = createWeather(engine.scene, game.city.streets, params.get('weather'));
   const safe = landmarkDoor(getLandmark('safehouse'));
   game.player = createPlayer(game, safe.x - 3, safe.z);
   game.fx = createParticles(engine.scene);
@@ -95,6 +97,7 @@ export function createGame() {
 function installGameEvents(game) {
   const ev = game.events;
   ev.on('dispatch', ({ text }) => showEvent(game, text, '#5aa8ff'));
+  ev.on('weatherChanged', ({ to }) => showEvent(game, to === 'rain' ? 'KBAY weather: a tropical downpour is rolling in off the bay' : `KBAY weather: ${WEATHER[to].label.toLowerCase()} skies over Marisol Bay`, '#9fd8ff'));
   ev.on('missionFailed', ({ reason }) => { game.lastFail = reason; });
   ev.on('playerDied', () => beginWasted(game, 'hospital'));
   ev.on('playerArrested', () => { if (game.player.alive && !game.respawn.state) beginWasted(game, 'arrest'); });
@@ -268,6 +271,7 @@ function updateFrame(game, rawDt) {
   const focus = game.mode === 'title' ? game.engine.camera.position : game.player.pos;
   game.night = updateDayNight(game.city.dayNight, game.hours, focus, game.engine.camera.position, game.engine.renderer, rawDt);
   game.engine.night = game.night;
+  updateWeather(game, rawDt);
   for (const m of game.city.buildings.nightMaterials) m.emissiveIntensity = game.night * 1.5;
   for (const m of game.city.buildings.signMaterials) m.color.setScalar(0.85 + game.night * 1.6);
   for (const m of game.city.buildings.haloMaterials) m.opacity = game.night * 0.55;

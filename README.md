@@ -17,6 +17,7 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 - **Combat**: fists, the Viper 9 pistol, Hornet SMG, Breaker 12 shotgun and Longshot AR, with over-the-shoulder aiming, tracers, armour and health. Buy guns, ammo and armour at Iron Pelican Arms.
 - **Story**: eight chapters (Homecoming, Borrowed Time, Quiet Shadow, Reef Cleanup, Hot Ice, Tail Lights, Bank Holiday, Sundown) with subtitled dialogue, objectives, map markers and light beams: pick-ups, a car theft, tailing a van, a gang shootout, a timed delivery, a car chase, a bank job and a final showdown.
 - **Side activities**: the Tidewater Sprint street race against three rivals, taxi fares in a Marisol Cab, and twenty hidden Lucky Gecko statuettes.
+- **Weather**: mostly sunny, sometimes hazy or cloudy, now and then a tropical downpour with rain streaks, lower fog and soaked asphalt that mirrors lamps and neon and costs cars grip until it dries. KBAY announces each change.
 - **Skills and respect**: driving fast raises Driving (more grip), landing shots raises Shooting (tighter spread), sprinting raises Stamina, and missions, race wins, takedowns and carjackings earn Respect ranks (Nobody → King of Marisol) that raise maximum health. Shown in the pause menu and saved.
 - **Phone (P)**: call Lupe for the next job, Manny's Motors to have a Marlin GT dropped at the kerb, lawyer Sal Benedetti to make two stars disappear, or the safehouse to save.
 - **Procedural models**: cars with real wheel arches, inset windows and pillars, bumpers, grilles, plates, mirrors, multi-spoke rims and police door livery; people with rounded heads, eyes, eight hairstyles, beards, shades, jackets, shorts and capsule limbs.
@@ -42,7 +43,7 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 | P | Phone (1-4 to call a contact) |
 | Esc | Pause menu |
 
-Scene presets for testing: `?scene=chase`, `?scene=shootout`, `?scene=race`, `?scene=hijack`, `?scene=night`, `?scene=showroom` (every vehicle and a row of locals), `?play=1` (skip the title), `?post=0` (no post-processing), `?lowfx=1` (no shadows or post-processing).
+Scene presets for testing: `?scene=chase`, `?scene=shootout`, `?scene=race`, `?scene=hijack`, `?scene=night`, `?scene=showroom` (every vehicle and a row of locals), `?play=1` (skip the title), `?weather=rain|cloudy|hazy|sunny`, `?post=0` (no post-processing), `?lowfx=1` (no shadows or post-processing).
 
 ## Run it
 
