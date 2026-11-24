@@ -118,6 +118,8 @@ export function renderWithPostFx(fx, scene, camera, night = 0) {
   const r = fx.renderer;
   r.setRenderTarget(fx.scene);
   r.render(scene, camera);
+  fx.sceneCalls = r.info.render.calls;
+  fx.sceneTriangles = r.info.render.triangles;
   fx.bright.uniforms.tScene.value = fx.scene.texture;
   fx.bright.uniforms.threshold.value = 1.05 - night * 0.45;
   pass(fx, fx.bright, fx.half);

@@ -1,6 +1,6 @@
 // Sundown Syndicate: an open-world crime game set in Marisol Bay. Builds the city, then runs the frame:
 // input, Dez on foot or at the wheel, traffic, pedestrians, police and the wanted level, combat, missions and
-// side jobs, effects, audio, the HUD and menus.
+// side jobs, skills and respect, the phone, effects, audio, the HUD and menus, then an HDR bloom/grade pass.
 import { createEngine, renderFrame } from './core/engine.js';
 import { createInput, endInputFrame, wasKeyPressed, releasePointer } from './core/input.js';
 import { startLoop } from './core/loop.js';
@@ -287,7 +287,9 @@ function updateFrame(game, rawDt) {
 const game = createGame();
 window.__game = game;
 game.debugInfo = () => ({
-  mode: game.mode, calls: game.engine.renderer.info.render.calls, tris: game.engine.renderer.info.render.triangles,
+  mode: game.mode,
+  calls: game.engine.postFx ? game.engine.postFx.sceneCalls : game.engine.renderer.info.render.calls,
+  tris: game.engine.postFx ? game.engine.postFx.sceneTriangles : game.engine.renderer.info.render.triangles,
   vehicles: game.vehicles.length, peds: game.peds.length, hostiles: game.hostiles.length,
   player: [+game.player.pos.x.toFixed(1), +game.player.pos.z.toFixed(1)], inCar: game.player.vehicle ? game.player.vehicle.type.name : null,
   speed: game.player.vehicle ? +(vehicleSpeed(game.player.vehicle) * 3.6).toFixed(0) : 0,

@@ -17,6 +17,10 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 - **Combat**: fists, the Viper 9 pistol, Hornet SMG, Breaker 12 shotgun and Longshot AR, with over-the-shoulder aiming, tracers, armour and health. Buy guns, ammo and armour at Iron Pelican Arms.
 - **Story**: eight chapters (Homecoming, Borrowed Time, Quiet Shadow, Reef Cleanup, Hot Ice, Tail Lights, Bank Holiday, Sundown) with subtitled dialogue, objectives, map markers and light beams: pick-ups, a car theft, tailing a van, a gang shootout, a timed delivery, a car chase, a bank job and a final showdown.
 - **Side activities**: the Tidewater Sprint street race against three rivals, taxi fares in a Marisol Cab, and twenty hidden Lucky Gecko statuettes.
+- **Skills and respect**: driving fast raises Driving (more grip), landing shots raises Shooting (tighter spread), sprinting raises Stamina, and missions, race wins, takedowns and carjackings earn Respect ranks (Nobody → King of Marisol) that raise maximum health. Shown in the pause menu and saved.
+- **Phone (P)**: call Lupe for the next job, Manny's Motors to have a Marlin GT dropped at the kerb, lawyer Sal Benedetti to make two stars disappear, or the safehouse to save.
+- **Procedural models**: cars with real wheel arches, inset windows and pillars, bumpers, grilles, plates, mirrors, multi-spoke rims and police door livery; people with rounded heads, eyes, eight hairstyles, beards, shades, jackets, shorts and capsule limbs.
+- **Post-processing written for the game**: the scene renders into an HDR multisampled target, then a two-level bloom, ACES tone mapping, a split-tone colour grade and a vignette, so neon, headlights and siren bars glow.
 - **HUD and menus**: rotating radar with blips and a red-blue flashing frame when wanted, full map with street and district names (M), speedometer, radio station, money, weapon and ammo, mission panel, dispatch feed, title screen, pause menu, settings and localStorage saves at the Seabreeze safehouse.
 - **Day and night**: the sun crosses the sky and casts shadows; at night windows light up, neon signs glow and street lamps come on. Three original radio stations play procedurally sequenced music.
 
@@ -35,9 +39,10 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 | H | Horn |
 | T | Taxi duty in a Marisol Cab |
 | M | Map |
+| P | Phone (1-4 to call a contact) |
 | Esc | Pause menu |
 
-Scene presets for testing: `?scene=chase`, `?scene=shootout`, `?scene=race`, `?scene=hijack`, `?scene=night`, `?play=1` (skip the title).
+Scene presets for testing: `?scene=chase`, `?scene=shootout`, `?scene=race`, `?scene=hijack`, `?scene=night`, `?scene=showroom` (every vehicle and a row of locals), `?play=1` (skip the title), `?post=0` (no post-processing), `?lowfx=1` (no shadows or post-processing).
 
 ## Run it
 
