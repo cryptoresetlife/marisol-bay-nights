@@ -23,6 +23,7 @@ export function saveGame(game) {
     taxiFares: game.sideJobs.taxiFares,
     stats: game.stats,
     progression: game.progression,
+    garage: game.garage ? game.garage.cars : [],
   };
   try {
     localStorage.setItem(KEY, JSON.stringify(data));
@@ -50,6 +51,7 @@ export function loadGame(game) {
   game.sideJobs.taxiFares = data.taxiFares || 0;
   game.stats = { ...game.stats, ...(data.stats || {}) };
   if (data.progression?.xp) game.progression.xp = { ...game.progression.xp, ...data.progression.xp };
+  if (game.garage && Array.isArray(data.garage)) game.garage.cars = data.garage.filter((c) => c && c.type).slice(-3);
   game.events.emit('loaded', data);
   return true;
 }

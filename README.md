@@ -19,6 +19,7 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 - **Side activities**: the Tidewater Sprint street race against three rivals, taxi fares in a Marisol Cab, and twenty hidden Lucky Gecko statuettes.
 - **Weather**: mostly sunny, sometimes hazy or cloudy, now and then a tropical downpour with rain streaks, lower fog and soaked asphalt that mirrors lamps and neon and costs cars grip until it dries. KBAY announces each change.
 - **Skills and respect**: driving fast raises Driving (more grip), landing shots raises Shooting (tighter spread), sprinting raises Stamina, and missions, race wins, takedowns and carjackings earn Respect ranks (Nobody → King of Marisol) that raise maximum health. Shown in the pause menu and saved.
+- **Seabreeze garage**: stop a car on the yellow pad beside the safehouse to keep it (three slots, saved with the game) and press G on foot to take it out again. Police cars, mission cars and cars with a wanted level are turned away.
 - **Phone (P)**: call Lupe for the next job, Manny's Motors to have a Marlin GT dropped at the kerb, lawyer Sal Benedetti to make two stars disappear, or the safehouse to save.
 - **Procedural models**: cars with real wheel arches, inset windows and pillars, bumpers, grilles, plates, mirrors, multi-spoke rims and police door livery; people with rounded heads, eyes, eight hairstyles, beards, shades, jackets, shorts and capsule limbs.
 - **Post-processing written for the game**: the scene renders into an HDR multisampled target, then a two-level bloom, ACES tone mapping, a split-tone colour grade and a vignette, so neon, headlights and siren bars glow.
@@ -41,6 +42,7 @@ Dez walks out of county lockup into **Marisol Bay**, a sun-soaked seaside city t
 | T | Taxi duty in a Marisol Cab |
 | M | Map |
 | P | Phone (1-4 to call a contact) |
+| G | Take a car out of the Seabreeze garage |
 | Esc | Pause menu |
 
 Scene presets for testing: `?scene=chase`, `?scene=shootout`, `?scene=race`, `?scene=hijack`, `?scene=night`, `?scene=showroom` (every vehicle and a row of locals), `?play=1` (skip the title), `?weather=rain|cloudy|hazy|sunny`, `?post=0` (no post-processing), `?lowfx=1` (no shadows or post-processing).

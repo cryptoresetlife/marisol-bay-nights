@@ -34,6 +34,7 @@ import { updateMarkers } from './missions/markers.js';
 import { createSideJobs, buildGeckos, updateSideJobs } from './missions/sideJobs.js';
 import { createRaceState, updateStreetRace } from './missions/streetRace.js';
 import { shopSpots, updateShops } from './economy/shops.js';
+import { createGarage, updateGarage } from './economy/garage.js';
 import { createHud, updateHud, showEvent, showBanner, setPrompt } from './ui/hud.js';
 import { paintCityMap } from './ui/mapPainter.js';
 import { createBigMap, toggleBigMap, drawBigMap } from './ui/bigMap.js';
@@ -84,6 +85,7 @@ export function createGame() {
   game.hud = createHud(game, mapCanvas);
   game.bigMap = createBigMap(mapCanvas);
   game.shops = shopSpots();
+  game.garage = createGarage(engine.scene);
   buildGeckos(game);
   installDamageRules(game);
   installCrimeRules(game);
@@ -124,6 +126,7 @@ export function startNewGame(game) {
   game.progression = createProgression();
   applyRespectPerks(game);
   game.player.health = game.player.maxHealth;
+  game.garage.cars = [];
   const door = landmarkDoor(getLandmark('police'));
   placePlayer(game, door.x + 2, door.z - 1.5, Math.PI);
   game.hours = 10.5;
@@ -236,6 +239,7 @@ function updatePlayState(game, dt) {
   updateStreetRace(game, dt);
   updateSideJobs(game, dt);
   updateShops(game, dt);
+  updateGarage(game, dt);
   updateProgression(game, dt);
   updateRespawn(game, dt);
 }
